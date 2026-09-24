@@ -10,833 +10,371 @@
 
 <link rel="stylesheet" href="style.css">
 
-<style>
+<!-- Browser AI -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
-/* ==============================
-   GLOBAL
-============================== */
+<style>
 
 body {
     background:
-        radial-gradient(
-            circle at 10% 10%,
-            rgba(34,197,94,0.10),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 90% 20%,
-            rgba(59,130,246,0.10),
-            transparent 30%
-        ),
+        radial-gradient(circle at 10% 10%, rgba(34,197,94,.10), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(59,130,246,.10), transparent 30%),
         #050b14;
-
-    color: #f8fafc;
+    color:#f8fafc;
 }
-
-
-/* ==============================
-   MAIN WRAPPER
-============================== */
 
 .complaint-wrapper {
-
-    max-width: 1100px;
-
-    margin: 40px auto;
-
-    padding: 20px;
+    max-width:1100px;
+    margin:40px auto;
+    padding:20px;
 }
 
-
-/* ==============================
-   TOP HEADER
-============================== */
-
 .page-header {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 25px;
-
-    gap: 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    gap:20px;
 }
 
 .brand-mini {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 12px;
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
 .brand-logo {
-
-    width: 48px;
-
-    height: 48px;
-
-    border-radius: 14px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background:
-        linear-gradient(
-            135deg,
-            #22c55e,
-            #0ea5e9
-        );
-
-    font-size: 22px;
-
-    box-shadow:
-        0 0 25px
-        rgba(34,197,94,0.25);
+    width:48px;
+    height:48px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#22c55e,#0ea5e9);
+    font-size:22px;
 }
 
 .brand-text h1 {
-
-    margin: 0;
-
-    font-size: 22px;
+    margin:0;
+    font-size:22px;
 }
 
 .brand-text p {
-
-    margin: 3px 0 0;
-
-    color: #94a3b8;
-
-    font-size: 13px;
+    margin:3px 0 0;
+    color:#94a3b8;
+    font-size:13px;
 }
 
-
-/* ==============================
-   AI STATUS
-============================== */
-
 .ai-live {
-
-    padding: 9px 14px;
-
-    border-radius: 30px;
-
-    background: rgba(34,197,94,0.08);
-
-    border: 1px solid
-        rgba(34,197,94,0.25);
-
-    color: #4ade80;
-
-    font-size: 13px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
+    padding:9px 14px;
+    border-radius:30px;
+    background:rgba(34,197,94,.08);
+    border:1px solid rgba(34,197,94,.25);
+    color:#4ade80;
+    font-size:13px;
 }
 
 .live-dot {
-
-    width: 8px;
-
-    height: 8px;
-
-    background: #22c55e;
-
-    border-radius: 50%;
-
-    box-shadow:
-        0 0 10px #22c55e;
-
-    animation: pulse 1.5s infinite;
+    display:inline-block;
+    width:8px;
+    height:8px;
+    background:#22c55e;
+    border-radius:50%;
+    margin-right:7px;
 }
-
-@keyframes pulse {
-
-    0% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: .3;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-
-/* ==============================
-   GRID
-============================== */
 
 .complaint-grid {
-
-    display: grid;
-
-    grid-template-columns:
-        1.25fr
-        .75fr;
-
-    gap: 20px;
+    display:grid;
+    grid-template-columns:1.25fr .75fr;
+    gap:20px;
 }
-
-
-/* ==============================
-   CARD
-============================== */
 
 .glass-card {
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(15,23,42,0.92),
-            rgba(8,15,28,0.92)
-        );
-
-    border: 1px solid
-        rgba(148,163,184,0.12);
-
-    border-radius: 22px;
-
-    padding: 22px;
-
-    box-shadow:
-        0 20px 60px
-        rgba(0,0,0,.25);
-
-    backdrop-filter: blur(18px);
+    background:linear-gradient(
+        145deg,
+        rgba(15,23,42,.94),
+        rgba(8,15,28,.94)
+    );
+    border:1px solid rgba(148,163,184,.12);
+    border-radius:22px;
+    padding:22px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+    margin-bottom:20px;
 }
 
-
-/* ==============================
-   SECTION TITLE
-============================== */
-
 .section-title {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
 }
 
 .section-title h2 {
-
-    margin: 0;
-
-    font-size: 17px;
+    margin:0;
+    font-size:17px;
 }
 
 .section-title span {
-
-    font-size: 11px;
-
-    color: #64748b;
-
-    text-transform: uppercase;
-
-    letter-spacing: 1px;
+    font-size:11px;
+    color:#64748b;
+    text-transform:uppercase;
 }
 
-
-/* ==============================
-   CAMERA
-============================== */
-
 .camera-frame {
-
-    position: relative;
-
-    overflow: hidden;
-
-    border-radius: 18px;
-
-    background: #000;
-
-    aspect-ratio: 16 / 10;
-
-    border: 1px solid
-        rgba(255,255,255,.08);
+    position:relative;
+    overflow:hidden;
+    border-radius:18px;
+    background:#000;
+    aspect-ratio:16/10;
+    border:1px solid rgba(255,255,255,.08);
 }
 
 #camera {
-
-    width: 100%;
-
-    height: 100%;
-
-    object-fit: cover;
+    width:100%;
+    height:100%;
+    object-fit:cover;
 }
 
-
-/* CAMERA CORNERS */
-
 .corner {
-
-    position: absolute;
-
-    width: 30px;
-
-    height: 30px;
-
-    border-color: #4ade80;
-
-    border-style: solid;
+    position:absolute;
+    width:30px;
+    height:30px;
+    border-color:#4ade80;
+    border-style:solid;
 }
 
 .c1 {
-
-    top: 15px;
-    left: 15px;
-
-    border-width:
-        2px 0 0 2px;
+    top:15px;
+    left:15px;
+    border-width:2px 0 0 2px;
 }
 
 .c2 {
-
-    top: 15px;
-    right: 15px;
-
-    border-width:
-        2px 2px 0 0;
+    top:15px;
+    right:15px;
+    border-width:2px 2px 0 0;
 }
 
 .c3 {
-
-    bottom: 15px;
-    left: 15px;
-
-    border-width:
-        0 0 2px 2px;
+    bottom:15px;
+    left:15px;
+    border-width:0 0 2px 2px;
 }
 
 .c4 {
-
-    bottom: 15px;
-    right: 15px;
-
-    border-width:
-        0 2px 2px 0;
+    bottom:15px;
+    right:15px;
+    border-width:0 2px 2px 0;
 }
 
-
-/* SCANNING LINE */
-
 .scan-line {
-
-    position: absolute;
-
-    left: 0;
-
-    right: 0;
-
-    height: 2px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            #22c55e,
-            transparent
-        );
-
-    box-shadow:
-        0 0 15px #22c55e;
-
-    animation:
-        scan 3s linear infinite;
+    position:absolute;
+    left:0;
+    right:0;
+    height:2px;
+    background:#22c55e;
+    box-shadow:0 0 15px #22c55e;
+    animation:scan 3s linear infinite;
 }
 
 @keyframes scan {
-
-    0% {
-        top: 5%;
-    }
-
-    50% {
-        top: 95%;
-    }
-
-    100% {
-        top: 5%;
-    }
+    0% { top:5%; }
+    50% { top:95%; }
+    100% { top:5%; }
 }
-
-
-/* CAMERA LABEL */
 
 .camera-label {
-
-    position: absolute;
-
-    top: 15px;
-
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    padding: 7px 12px;
-
-    border-radius: 20px;
-
-    background:
-        rgba(0,0,0,.55);
-
-    backdrop-filter: blur(10px);
-
-    font-size: 11px;
-
-    color: #e2e8f0;
+    position:absolute;
+    top:15px;
+    left:50%;
+    transform:translateX(-50%);
+    padding:7px 12px;
+    border-radius:20px;
+    background:rgba(0,0,0,.65);
+    font-size:11px;
 }
 
-
-/* ==============================
-   LIVE AI OVERLAY
-============================== */
-
 .live-ai-status {
-
-    position: absolute;
-
-    bottom: 15px;
-
-    left: 15px;
-
-    right: 15px;
-
-    padding: 10px 13px;
-
-    border-radius: 12px;
-
-    background:
-        rgba(0,0,0,.70);
-
-    backdrop-filter: blur(10px);
-
-    border: 1px solid
-        rgba(255,255,255,.08);
-
-    font-size: 12px;
-
-    color: #cbd5e1;
+    position:absolute;
+    bottom:15px;
+    left:15px;
+    right:15px;
+    padding:12px;
+    border-radius:12px;
+    background:rgba(0,0,0,.75);
+    border:1px solid rgba(255,255,255,.08);
+    font-size:12px;
 }
 
 #liveScanText {
-
-    font-weight: 600;
-
-    color: #f8fafc;
+    font-weight:700;
 }
 
 #liveConfidence {
-
-    margin-left: 6px;
-
-    color: #94a3b8;
+    margin-left:8px;
+    color:#94a3b8;
 }
 
-
-/* ==============================
-   CAMERA BUTTONS
-============================== */
-
 .camera-controls {
-
-    display: grid;
-
-    grid-template-columns:
-        1fr 1.4fr 1fr;
-
-    gap: 10px;
-
-    margin-top: 15px;
+    display:grid;
+    grid-template-columns:1fr 1.4fr 1fr;
+    gap:10px;
+    margin-top:15px;
 }
 
 .cam-btn {
-
-    border: none;
-
-    border-radius: 12px;
-
-    padding: 12px;
-
-    cursor: pointer;
-
-    color: white;
-
-    font-weight: 600;
-
-    transition: .2s;
-}
-
-.cam-btn:hover {
-
-    transform: translateY(-2px);
+    border:none;
+    border-radius:12px;
+    padding:12px;
+    cursor:pointer;
+    color:white;
+    font-weight:600;
 }
 
 .start {
-
-    background: #1d4ed8;
+    background:#1d4ed8;
 }
 
 .capture {
-
-    background:
-        linear-gradient(
-            135deg,
-            #22c55e,
-            #16a34a
-        );
-
-    box-shadow:
-        0 8px 25px
-        rgba(34,197,94,.2);
+    background:linear-gradient(135deg,#22c55e,#16a34a);
 }
 
 .capture:disabled {
-
-    background: #1e293b;
-
-    color: #64748b;
-
-    cursor: not-allowed;
-
-    box-shadow: none;
-
-    transform: none;
+    background:#1e293b;
+    color:#64748b;
+    cursor:not-allowed;
 }
 
 .stop {
-
-    background: #7f1d1d;
+    background:#7f1d1d;
 }
-
-
-/* ==============================
-   TARGET STATUS
-============================== */
 
 .target-status {
-
-    margin-top: 15px;
-
-    padding: 14px;
-
-    border-radius: 14px;
-
-    background:
-        rgba(14,165,233,.08);
-
-    border: 1px solid
-        rgba(14,165,233,.20);
-
-    color: #bae6fd;
-
-    font-size: 13px;
+    margin-top:15px;
+    padding:14px;
+    border-radius:14px;
+    background:rgba(14,165,233,.08);
+    border:1px solid rgba(14,165,233,.20);
+    color:#bae6fd;
+    font-size:13px;
 }
-
-
-/* ==============================
-   DESCRIPTION
-============================== */
 
 textarea {
-
-    width: 100%;
-
-    box-sizing: border-box;
-
-    background:
-        rgba(15,23,42,.8);
-
-    border: 1px solid
-        rgba(148,163,184,.15);
-
-    border-radius: 14px;
-
-    padding: 15px;
-
-    color: white;
-
-    outline: none;
-
-    resize: vertical;
-
-    font-family: inherit;
-
-    margin-top: 15px;
-}
-
-textarea:focus {
-
-    border-color: #22c55e;
-
-    box-shadow:
-        0 0 0 3px
-        rgba(34,197,94,.08);
-}
-
-
-/* ==============================
-   AI VERIFICATION
-============================== */
-
-.verification-card {
-
-    min-height: 180px;
+    width:100%;
+    box-sizing:border-box;
+    background:rgba(15,23,42,.8);
+    border:1px solid rgba(148,163,184,.15);
+    border-radius:14px;
+    padding:15px;
+    color:white;
+    outline:none;
+    resize:vertical;
+    font-family:inherit;
 }
 
 .ai-status-box {
-
-    padding: 18px;
-
-    border-radius: 15px;
-
-    background:
-        rgba(2,6,23,.7);
-
-    border: 1px solid
-        rgba(148,163,184,.10);
-
-    margin-top: 15px;
+    padding:18px;
+    border-radius:15px;
+    background:rgba(2,6,23,.7);
+    border:1px solid rgba(148,163,184,.10);
 }
 
 .ai-icon {
-
-    width: 45px;
-
-    height: 45px;
-
-    border-radius: 14px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background:
-        rgba(34,197,94,.1);
-
-    font-size: 22px;
-
-    margin-bottom: 12px;
+    font-size:25px;
+    margin-bottom:10px;
 }
 
 #verificationStatus {
-
-    font-weight: 600;
-
-    margin: 5px 0;
+    font-weight:700;
 }
 
 #verificationScore {
-
-    color: #94a3b8;
-
-    font-size: 13px;
+    color:#94a3b8;
+    font-size:13px;
 }
 
-
-/* ==============================
-   EVIDENCE DETAILS
-============================== */
-
 .evidence-grid {
-
-    display: grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap: 10px;
-
-    margin-top: 15px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
 }
 
 .info-box {
-
-    background:
-        rgba(15,23,42,.65);
-
-    border:
-        1px solid
-        rgba(148,163,184,.10);
-
-    border-radius: 12px;
-
-    padding: 12px;
+    background:rgba(15,23,42,.65);
+    border:1px solid rgba(148,163,184,.10);
+    border-radius:12px;
+    padding:12px;
 }
 
 .info-box small {
-
-    display: block;
-
-    color: #64748b;
-
-    font-size: 10px;
-
-    text-transform: uppercase;
-
-    margin-bottom: 5px;
+    display:block;
+    color:#64748b;
+    font-size:10px;
+    text-transform:uppercase;
+    margin-bottom:5px;
 }
 
 .info-box strong {
-
-    font-size: 13px;
-
-    color: #e2e8f0;
-}
-
-
-/* ==============================
-   SEVERITY
-============================== */
-
-.severity-card {
-
-    margin-top: 20px;
+    font-size:13px;
 }
 
 .severity-placeholder {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 12px;
-
-    padding: 15px;
-
-    border-radius: 14px;
-
-    background:
-        rgba(15,23,42,.7);
-
-    border: 1px solid
-        rgba(148,163,184,.10);
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:15px;
+    border-radius:14px;
+    background:rgba(15,23,42,.7);
 }
 
 .severity-dot {
-
-    width: 13px;
-
-    height: 13px;
-
-    border-radius: 50%;
-
-    background: #64748b;
+    width:13px;
+    height:13px;
+    border-radius:50%;
+    background:#64748b;
 }
-
-
-/* ==============================
-   SUBMIT
-============================== */
 
 .submit-btn {
-
-    width: 100%;
-
-    margin-top: 20px;
-
-    padding: 16px;
-
-    border: none;
-
-    border-radius: 14px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #22c55e,
-            #0ea5e9
-        );
-
-    color: white;
-
-    font-size: 15px;
-
-    font-weight: 700;
-
-    cursor: pointer;
-
-    transition: .25s;
-
-    box-shadow:
-        0 10px 35px
-        rgba(14,165,233,.15);
-}
-
-.submit-btn:hover {
-
-    transform: translateY(-2px);
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:14px;
+    background:linear-gradient(135deg,#22c55e,#0ea5e9);
+    color:white;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
 }
 
 .submit-btn:disabled {
-
-    background: #1e293b;
-
-    color: #64748b;
-
-    cursor: not-allowed;
-
-    box-shadow: none;
-
-    transform: none;
+    background:#1e293b;
+    color:#64748b;
+    cursor:not-allowed;
 }
-
-
-/* ==============================
-   MOBILE
-============================== */
 
 @media(max-width:800px) {
 
     .complaint-grid {
-
-        grid-template-columns: 1fr;
+        grid-template-columns:1fr;
     }
 
     .page-header {
-
-        align-items: flex-start;
-
-        flex-direction: column;
+        flex-direction:column;
+        align-items:flex-start;
     }
-
 }
 
 @media(max-width:500px) {
 
     .complaint-wrapper {
-
-        margin: 15px auto;
-
-        padding: 12px;
+        margin:15px auto;
+        padding:12px;
     }
 
     .camera-controls {
-
-        grid-template-columns: 1fr;
+        grid-template-columns:1fr;
     }
-
 }
 
 </style>
@@ -884,345 +422,244 @@ textarea:focus {
 </div>
 
 
-
 <div class="complaint-grid">
 
 
-<!-- =========================
-     LEFT SIDE
-========================= -->
+<!-- LEFT -->
 
 <div>
 
 
-    <!-- CAMERA CARD -->
+<div class="glass-card">
 
-    <div class="glass-card">
+<div class="section-title">
 
-        <div class="section-title">
+<h2>📷 Capture Evidence</h2>
 
-            <h2>
-                📷 Capture Evidence
-            </h2>
+<span>CAMERA + AI</span>
 
-            <span>
-                CAMERA ONLY
-            </span>
-
-        </div>
+</div>
 
 
-        <div class="camera-frame">
+<div class="camera-frame">
 
-            <video
-                id="camera"
-                autoplay
-                playsinline>
-            </video>
-
-
-            <div class="corner c1"></div>
-            <div class="corner c2"></div>
-            <div class="corner c3"></div>
-            <div class="corner c4"></div>
-
-            <div class="scan-line"></div>
+<video
+id="camera"
+autoplay
+playsinline>
+</video>
 
 
-            <div class="camera-label">
+<div class="corner c1"></div>
+<div class="corner c2"></div>
+<div class="corner c3"></div>
+<div class="corner c4"></div>
 
-                LIVE EVIDENCE CAPTURE
-
-            </div>
-
-
-            <!-- LIVE AI STATUS -->
-
-            <div class="live-ai-status">
-
-                <span id="liveScanText">
-                    🔒 Waiting for complaint...
-                </span>
-
-                <span id="liveConfidence">
-                    --
-                </span>
-
-            </div>
-
-        </div>
+<div class="scan-line"></div>
 
 
-        <canvas
-            id="canvas"
-            style="display:none;">
-        </canvas>
+<div class="camera-label">
+
+LIVE AI EVIDENCE SCANNING
+
+</div>
 
 
-        <div class="camera-controls">
+<div class="live-ai-status">
 
-            <button
-                class="cam-btn start"
-                onclick="startCamera()">
+<span id="liveScanText">
 
-                ▶ Start
+🔒 Describe your complaint first
 
-            </button>
+</span>
 
+<span id="liveConfidence">
 
-            <button
-                id="captureBtn"
-                class="cam-btn capture"
-                onclick="capturePhoto()"
-                disabled>
+--
 
-                🔒 Evidence Not Verified
+</span>
 
-            </button>
+</div>
+
+</div>
 
 
-            <button
-                class="cam-btn stop"
-                onclick="stopCamera()">
-
-                ■ Stop
-
-            </button>
-
-        </div>
+<canvas
+id="canvas"
+style="display:none;">
+</canvas>
 
 
-        <!-- TARGET STATUS -->
+<div class="camera-controls">
 
-        <div
-            id="targetStatus"
-            class="target-status">
+<button
+class="cam-btn start"
+onclick="startCamera()">
 
-            🔍 Enter your complaint first.
-            AI will identify the required evidence.
+▶ Start Camera
 
-        </div>
-
-    </div>
+</button>
 
 
+<button
+id="captureBtn"
+class="cam-btn capture"
+onclick="capturePhoto()"
+disabled>
 
-    <!-- DESCRIPTION -->
+🔒 Evidence Not Detected
 
-    <div
-        class="glass-card"
-        style="margin-top:20px;">
-
-        <div class="section-title">
-
-            <h2>
-                📝 Complaint Details
-            </h2>
-
-            <span>
-                AI INPUT
-            </span>
-
-        </div>
+</button>
 
 
-        <textarea
-            id="description"
-            rows="6"
-            placeholder="Example: Large pothole near the main road causing danger to vehicles."></textarea>
+<button
+class="cam-btn stop"
+onclick="stopCamera()">
 
-    </div>
+■ Stop
+
+</button>
+
+</div>
+
+
+<div
+id="targetStatus"
+class="target-status">
+
+🔍 Enter your complaint first.
+
+Example:
+"Books are dumped together in this area."
+
+</div>
+
+</div>
+
+
+<!-- DESCRIPTION -->
+
+<div class="glass-card">
+
+<div class="section-title">
+
+<h2>📝 Complaint Details</h2>
+
+<span>AI INPUT</span>
+
+</div>
+
+
+<textarea
+id="description"
+rows="6"
+placeholder="Example: Many books are dumped together on the floor.">
+</textarea>
+
+</div>
 
 
 </div>
 
 
-
-<!-- =========================
-     RIGHT SIDE
-========================= -->
+<!-- RIGHT -->
 
 <div>
 
 
-    <!-- AI VERIFICATION -->
+<!-- AI -->
 
-    <div class="glass-card verification-card">
+<div class="glass-card">
 
-        <div class="section-title">
+<div class="section-title">
 
-            <h2>
-                🤖 Evidence Intelligence
-            </h2>
+<h2>🤖 Evidence Intelligence</h2>
 
-            <span>
-                AI ANALYSIS
-            </span>
+<span>LOCAL AI</span>
 
-        </div>
+</div>
 
 
-        <div class="ai-status-box">
+<div class="ai-status-box">
 
-            <div class="ai-icon">
-                🧠
-            </div>
+<div class="ai-icon">
+🧠
+</div>
 
 
-            <p
-                id="verificationStatus">
+<p id="verificationStatus">
 
-                Waiting for camera evidence...
+Waiting for camera evidence...
 
-            </p>
+</p>
 
 
-            <p
-                id="verificationScore">
+<p id="verificationScore">
 
-                Describe your complaint and start the camera.
+The browser AI will scan the camera.
 
-            </p>
+</p>
 
-        </div>
+</div>
 
-    </div>
+</div>
 
 
+<!-- METADATA -->
 
-    <!-- EVIDENCE INFO -->
+<div class="glass-card">
 
-    <div
-        class="glass-card"
-        style="margin-top:20px;">
+<div class="section-title">
 
-        <div class="section-title">
+<h2>📍 Evidence Metadata</h2>
 
-            <h2>
-                📍 Evidence Metadata
-            </h2>
+<span>AUTO CAPTURED</span>
 
-            <span>
-                AUTO CAPTURED
-            </span>
+</div>
 
-        </div>
 
+<div class="evidence-grid">
 
-        <div class="evidence-grid">
+<div class="info-box">
 
-            <div class="info-box">
+<small>Date</small>
 
-                <small>Date</small>
+<strong id="captureDate">
+—
+</strong>
 
-                <strong id="captureDate">
-                    —
-                </strong>
+</div>
 
-            </div>
 
+<div class="info-box">
 
-            <div class="info-box">
+<small>Time</small>
 
-                <small>Time</small>
+<strong id="captureTime">
+—
+</strong>
 
-                <strong id="captureTime">
-                    —
-                </strong>
+</div>
 
-            </div>
 
+<div class="info-box">
 
-            <div class="info-box">
+<small>Latitude</small>
 
-                <small>Latitude</small>
+<strong id="latitude">
+—
+</strong>
 
-                <strong id="latitude">
-                    —
-                </strong>
+</div>
 
-            </div>
 
+<div class="info-box">
 
-            <div class="info-box">
+<small>Longitude</small>
 
-                <small>Longitude</small>
-
-                <strong id="longitude">
-                    —
-                </strong>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- SEVERITY -->
-
-    <div
-        class="glass-card severity-card">
-
-        <div class="section-title">
-
-            <h2>
-                🎯 AI Severity
-            </h2>
-
-            <span>
-                SMART PRIORITY
-            </span>
-
-        </div>
-
-
-        <div
-            class="severity-placeholder"
-            id="severityBox">
-
-            <div class="severity-dot"></div>
-
-            <div>
-
-                <strong>
-                    Awaiting complaint analysis
-                </strong>
-
-                <p
-                    style="
-                    margin:4px 0 0;
-                    color:#64748b;
-                    font-size:12px;
-                    ">
-
-                    AI will determine
-                    Critical / High /
-                    Medium / Low
-
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- SUBMIT -->
-
-    <button
-        id="submitBtn"
-        class="submit-btn"
-        onclick="submitComplaint()"
-        disabled>
-
-        🔒 Capture & Verify Evidence First
-
-    </button>
-
+<strong id="longitude">
+—
+</strong>
 
 </div>
 
@@ -1230,15 +667,74 @@ textarea:focus {
 
 </div>
 
+
+<!-- SEVERITY -->
+
+<div class="glass-card">
+
+<div class="section-title">
+
+<h2>🎯 AI Severity</h2>
+
+<span>SMART PRIORITY</span>
+
+</div>
+
+
+<div
+class="severity-placeholder"
+id="severityBox">
+
+<div class="severity-dot"></div>
+
+<div>
+
+<strong>
+Awaiting analysis
+</strong>
+
+<p style="margin:4px 0;color:#64748b;font-size:12px;">
+
+AI will determine priority.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<button
+id="submitBtn"
+class="submit-btn"
+onclick="submitComplaint()"
+disabled>
+
+🔒 Capture & Verify Evidence First
+
+</button>
+
+
+</div>
+
+</div>
+
+</div>
 
 
 <script>
 
-/* =====================================
+/* =================================================
    VARIABLES
-===================================== */
+================================================= */
 
 let cameraStream = null;
+
+let aiModel = null;
+
+let scanTimer = null;
 
 let capturedImageData = null;
 
@@ -1252,126 +748,121 @@ let captureTime = null;
 
 let evidenceVerified = false;
 
-
-/* =====================================
-   NEW AI LIVE SCAN VARIABLES
-===================================== */
-
 let targetComplaint = null;
 
 let liveEvidenceValid = false;
 
 let faceDetected = false;
 
-let wrongObjectDetected = false;
+let detectedBooks = 0;
 
-let scanTimer = null;
-
-let lastAIResult = null;
+let lastPredictions = [];
 
 
-/* =====================================
-   COMPLAINT TARGET DETECTION
-===================================== */
+/* =================================================
+   COMPLAINT DETECTION
+================================================= */
 
 function detectComplaintTarget(text) {
 
-    const value =
-        text.toLowerCase().trim();
+    const value = text.toLowerCase().trim();
 
+
+    /* BOOKS */
 
     if (
-
-        value.includes("pipeline") ||
-
-        value.includes("pipe") ||
-
-        value.includes("water leak") ||
-
-        value.includes("water leakage") ||
-
-        value.includes("leaking") ||
-
-        value.includes("leak")
-
+        value.includes("book") ||
+        value.includes("books") ||
+        value.includes("textbook") ||
+        value.includes("text books") ||
+        value.includes("books dumped") ||
+        value.includes("books pile")
     ) {
 
         return {
 
-            type: "pipeline",
+            type:"book",
 
-            label: "Pipeline / Water Leak"
+            label:"Books / Book Pile"
 
         };
 
     }
 
 
-    if (
-
-        value.includes("pothole") ||
-
-        value.includes("road hole") ||
-
-        value.includes("road damage") ||
-
-        value.includes("road broken")
-
-    ) {
-
-        return {
-
-            type: "pothole",
-
-            label: "Pothole / Road Damage"
-
-        };
-
-    }
-
+    /* GARBAGE */
 
     if (
-
         value.includes("garbage") ||
-
         value.includes("waste") ||
-
         value.includes("trash") ||
-
         value.includes("dump")
-
     ) {
 
         return {
 
-            type: "garbage",
+            type:"garbage",
 
-            label: "Garbage / Waste"
+            label:"Garbage / Waste"
 
         };
 
     }
 
 
+    /* PIPELINE */
+
     if (
-
-        value.includes("streetlight") ||
-
-        value.includes("street light") ||
-
-        value.includes("lamp post") ||
-
-        value.includes("light not working") ||
-
-        value.includes("light broken")
-
+        value.includes("pipeline") ||
+        value.includes("pipe") ||
+        value.includes("water leak") ||
+        value.includes("leak")
     ) {
 
         return {
 
-            type: "streetlight",
+            type:"pipeline",
 
-            label: "Streetlight"
+            label:"Pipeline / Water Leak"
+
+        };
+
+    }
+
+
+    /* POTHOLE */
+
+    if (
+        value.includes("pothole") ||
+        value.includes("road hole") ||
+        value.includes("road damage")
+    ) {
+
+        return {
+
+            type:"pothole",
+
+            label:"Pothole / Road Damage"
+
+        };
+
+    }
+
+
+    /* STREETLIGHT */
+
+    if (
+        value.includes("streetlight") ||
+        value.includes("street light") ||
+        value.includes("lamp post") ||
+        value.includes("light not working")
+    ) {
+
+        return {
+
+            type:"streetlight",
+
+            label:"Streetlight"
 
         };
 
@@ -1383,117 +874,157 @@ function detectComplaintTarget(text) {
 }
 
 
-/* =====================================
-   DESCRIPTION LISTENER
-===================================== */
+/* =================================================
+   DESCRIPTION INPUT
+================================================= */
 
 document
 .getElementById("description")
 .addEventListener(
-    "input",
-    function() {
+"input",
+function() {
 
-        const text =
-            this.value;
-
-
-        targetComplaint =
-            detectComplaintTarget(text);
+    targetComplaint =
+        detectComplaintTarget(this.value);
 
 
-        /*
-           Reset old evidence
-           whenever complaint changes
-        */
+    liveEvidenceValid = false;
 
-        liveEvidenceValid = false;
+    evidenceVerified = false;
 
-        faceDetected = false;
+    faceDetected = false;
 
-        wrongObjectDetected = false;
-
-        evidenceVerified = false;
-
-        capturedImageData = null;
+    detectedBooks = 0;
 
 
-        document.getElementById(
-            "submitBtn"
-        ).disabled = true;
+    document.getElementById(
+        "captureBtn"
+    ).disabled = true;
 
 
-        document.getElementById(
-            "captureBtn"
-        ).disabled = true;
+    document.getElementById(
+        "submitBtn"
+    ).disabled = true;
 
 
-        if(!targetComplaint) {
-
-            document.getElementById(
-                "targetStatus"
-            ).textContent =
-                "🔍 AI cannot identify the required evidence yet. Mention pothole, pipeline leak, garbage or streetlight.";
-
-            document.getElementById(
-                "liveScanText"
-            ).textContent =
-                "🔒 Waiting for valid complaint type";
-
-            document.getElementById(
-                "liveConfidence"
-            ).textContent =
-                "--";
-
-            stopLiveAI();
-
-            analyzeSeverity();
-
-            return;
-
-        }
-
+    if(!targetComplaint) {
 
         document.getElementById(
             "targetStatus"
         ).textContent =
-            "🎯 Required Evidence: " +
-            targetComplaint.label;
-
-
-        document.getElementById(
-            "verificationStatus"
-        ).textContent =
-            "Complaint target identified.";
-
-
-        document.getElementById(
-            "verificationScore"
-        ).textContent =
-            "Start the camera to begin live evidence scanning.";
+        "🔍 Mention what you want to report. Example: books, garbage, pipeline leak, pothole or streetlight.";
 
 
         document.getElementById(
             "liveScanText"
         ).textContent =
-            "📡 Ready to scan: " +
-            targetComplaint.label;
+        "🔒 Waiting for complaint type";
+
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "targetStatus"
+    ).textContent =
+    "🎯 Required Evidence: " +
+    targetComplaint.label;
+
+
+    document.getElementById(
+        "verificationStatus"
+    ).textContent =
+    "Complaint target identified";
+
+
+    document.getElementById(
+        "verificationScore"
+    ).textContent =
+    "Start camera. AI will scan the live frame.";
+
+
+    document.getElementById(
+        "liveScanText"
+    ).textContent =
+    "📡 Ready to detect: " +
+    targetComplaint.label;
+
+
+    analyzeSeverity();
+
+});
+
+
+/* =================================================
+   LOAD AI MODEL
+================================================= */
+
+async function loadAIModel() {
+
+    if(aiModel) {
+
+        return true;
+
+    }
+
+
+    document.getElementById(
+        "verificationStatus"
+    ).textContent =
+    "🧠 Loading browser AI...";
+
+
+    document.getElementById(
+        "verificationScore"
+    ).textContent =
+    "Please wait a few seconds.";
+
+
+    try {
+
+        aiModel =
+            await cocoSsd.load();
 
 
         document.getElementById(
-            "liveConfidence"
+            "verificationStatus"
         ).textContent =
-            "--";
+        "✅ Browser AI ready";
 
 
-        analyzeSeverity();
+        document.getElementById(
+            "verificationScore"
+        ).textContent =
+        "Camera evidence scanning is available.";
+
+
+        return true;
 
     }
-);
+
+    catch(error) {
+
+        console.error(error);
 
 
-/* =====================================
+        document.getElementById(
+            "verificationStatus"
+        ).textContent =
+        "❌ AI model could not load";
+
+
+        return false;
+
+    }
+
+}
+
+
+/* =================================================
    START CAMERA
-===================================== */
+================================================= */
 
 async function startCamera() {
 
@@ -1508,43 +1039,61 @@ async function startCamera() {
     }
 
 
+    const modelReady =
+        await loadAIModel();
+
+
+    if(!modelReady) {
+
+        alert(
+            "AI model could not be loaded."
+        );
+
+        return;
+
+    }
+
+
     try {
 
         cameraStream =
-            await navigator.mediaDevices
-            .getUserMedia({
+        await navigator.mediaDevices.getUserMedia({
 
-                video: {
-
-                    facingMode: {
-
-                        ideal: "environment"
-
-                    }
-
+            video:{
+                facingMode:{
+                    ideal:"environment"
                 },
 
-                audio: false
+                width:{
+                    ideal:1280
+                },
 
-            });
+                height:{
+                    ideal:720
+                }
+            },
+
+            audio:false
+
+        });
 
 
         document.getElementById(
             "camera"
         ).srcObject =
-            cameraStream;
+        cameraStream;
 
 
         document.getElementById(
             "verificationStatus"
         ).textContent =
-            "📡 Live camera connected.";
+        "📡 Camera connected";
 
 
         document.getElementById(
             "verificationScore"
         ).textContent =
-            "AI is scanning the camera for the reported problem.";
+        "AI is scanning the live camera frame.";
 
 
         startLiveAI();
@@ -1553,24 +1102,31 @@ async function startCamera() {
 
     catch(error) {
 
+        console.error(error);
+
+
         alert(
             "Camera permission is required."
         );
-
-        console.error(error);
 
     }
 
 }
 
 
-/* =====================================
+/* =================================================
    STOP CAMERA
-===================================== */
+================================================= */
 
 function stopCamera() {
 
-    stopLiveAI();
+    if(scanTimer) {
+
+        clearInterval(scanTimer);
+
+        scanTimer = null;
+
+    }
 
 
     if(cameraStream) {
@@ -1579,7 +1135,7 @@ function stopCamera() {
         .getTracks()
         .forEach(
             track =>
-                track.stop()
+            track.stop()
         );
 
         cameraStream = null;
@@ -1591,77 +1147,61 @@ function stopCamera() {
 
     faceDetected = false;
 
-    wrongObjectDetected = false;
+    detectedBooks = 0;
 
 
-    updateCaptureButton();
+    document.getElementById(
+        "captureBtn"
+    ).disabled = true;
 
 
     document.getElementById(
         "liveScanText"
     ).textContent =
-        "⏹ Camera stopped";
+    "⏹ Camera stopped";
 
 
     document.getElementById(
         "liveConfidence"
     ).textContent =
-        "--";
+    "--";
 
 }
 
 
-/* =====================================
+/* =================================================
    START LIVE AI
-===================================== */
+================================================= */
 
 function startLiveAI() {
 
-    stopLiveAI();
+    if(scanTimer) {
+
+        clearInterval(scanTimer);
+
+    }
 
 
     scanTimer =
-        setInterval(
-            scanLiveFrame,
-            1000
-        );
+    setInterval(
+        scanLiveFrame,
+        1200
+    );
 
 }
 
 
-/* =====================================
-   STOP LIVE AI
-===================================== */
-
-function stopLiveAI() {
-
-    if(scanTimer) {
-
-        clearInterval(
-            scanTimer
-        );
-
-        scanTimer = null;
-
-    }
-
-}
-
-
-/* =====================================
+/* =================================================
    LIVE FRAME SCAN
-===================================== */
+================================================= */
 
 async function scanLiveFrame() {
 
-    if(!cameraStream) {
-
-        return;
-
-    }
-
-
-    if(!targetComplaint) {
+    if(
+        !cameraStream ||
+        !aiModel ||
+        !targetComplaint
+    ) {
 
         return;
 
@@ -1669,17 +1209,14 @@ async function scanLiveFrame() {
 
 
     const video =
-        document.getElementById(
-            "camera"
-        );
+    document.getElementById(
+        "camera"
+    );
 
 
     if(
-
         !video.videoWidth ||
-
         !video.videoHeight
-
     ) {
 
         return;
@@ -1689,320 +1226,195 @@ async function scanLiveFrame() {
 
     try {
 
-        const result =
-            await analyzeLiveFrame(video);
+        const predictions =
+        await aiModel.detect(video);
 
 
-        if(!result) {
-
-            return;
-
-        }
+        lastPredictions =
+        predictions;
 
 
-        lastAIResult =
-            result;
-
-
-        updateLiveStatus(result);
+        processPredictions(predictions);
 
     }
 
     catch(error) {
 
         console.error(
-            "Live AI Error:",
+            "AI scan error:",
             error
         );
 
-
-        liveEvidenceValid = false;
-
-        faceDetected = false;
-
-        wrongObjectDetected = false;
-
-
-        updateCaptureButton();
-
-
-        document.getElementById(
-            "liveScanText"
-        ).textContent =
-            "⚠️ AI scanning service unavailable";
-
-
-        document.getElementById(
-            "liveConfidence"
-        ).textContent =
-            "Capture blocked";
-
     }
 
 }
 
 
-/* =====================================
-   BACKEND AI FRAME ANALYSIS
-===================================== */
-
-async function analyzeLiveFrame(video) {
-
-    /*
-       Convert current video frame
-       into JPEG.
-    */
-
-    const tempCanvas =
-        document.createElement(
-            "canvas"
-        );
-
-
-    tempCanvas.width =
-        video.videoWidth;
-
-    tempCanvas.height =
-        video.videoHeight;
-
-
-    const ctx =
-        tempCanvas.getContext(
-            "2d"
-        );
-
-
-    ctx.drawImage(
-
-        video,
-
-        0,
-
-        0,
-
-        tempCanvas.width,
-
-        tempCanvas.height
-
-    );
-
-
-    const image =
-        tempCanvas.toDataURL(
-            "image/jpeg",
-            0.75
-        );
-
-
-    /*
-       REAL BACKEND AI ENDPOINT
-
-       Your backend should analyse:
-
-       1. Target complaint object
-       2. Face
-       3. Unrelated object
-       4. Confidence
-    */
-
-
-    const response =
-        await fetch(
-            "/api/analyze-live-frame",
-            {
-
-                method: "POST",
-
-                headers: {
-
-                    "Content-Type":
-                        "application/json"
-
-                },
-
-                body: JSON.stringify({
-
-                    complaintType:
-                        targetComplaint.type,
-
-                    image:
-                        image
-
-                })
-
-            }
-        );
-
-
-    if(!response.ok) {
-
-        throw new Error(
-            "AI server returned " +
-            response.status
-        );
-
-    }
-
-
-    return await response.json();
-
-}
-
-
-/* =====================================
-   UPDATE LIVE AI STATUS
-===================================== */
-
-function updateLiveStatus(result) {
-
-    const scanText =
-        document.getElementById(
-            "liveScanText"
-        );
-
-
-    const confidence =
-        document.getElementById(
-            "liveConfidence"
-        );
-
-
-    /*
-       Face detected
-    */
-
-    if(result.faceDetected === true) {
-
-        faceDetected = true;
-
-        liveEvidenceValid = false;
-
-
-        scanText.textContent =
-            "🚫 Face detected — capture blocked";
-
-
-        confidence.textContent =
-            "Privacy protection";
-
-
-        updateCaptureButton();
-
-        return;
-
-    }
-
-
-    /*
-       Wrong / unrelated object
-    */
-
-    if(result.wrongObject === true) {
-
-        wrongObjectDetected = true;
-
-        liveEvidenceValid = false;
-
-
-        scanText.textContent =
-            "🚫 Unrelated object — capture blocked";
-
-
-        confidence.textContent =
-            formatConfidence(
-                result.confidence
-            );
-
-
-        updateCaptureButton();
-
-        return;
-
-    }
-
-
-    /*
-       Target not detected
-    */
-
-    if(result.targetDetected !== true) {
-
-        wrongObjectDetected = false;
-
-        faceDetected = false;
-
-        liveEvidenceValid = false;
-
-
-        scanText.textContent =
-            "🔍 Reported problem not detected";
-
-
-        confidence.textContent =
-            "Move camera toward " +
-            targetComplaint.label;
-
-
-        updateCaptureButton();
-
-        return;
-
-    }
-
-
-    /*
-       Target detected
-    */
-
-    if(
-
-        result.target !==
-        targetComplaint.type
-
-    ) {
-
-        wrongObjectDetected = true;
-
-        liveEvidenceValid = false;
-
-
-        scanText.textContent =
-            "🚫 Wrong evidence detected";
-
-
-        confidence.textContent =
-            "Expected: " +
-            targetComplaint.label;
-
-
-        updateCaptureButton();
-
-        return;
-
-    }
-
-
-    /*
-       Correct target
-    */
+/* =================================================
+   PROCESS AI PREDICTIONS
+================================================= */
+
+function processPredictions(predictions) {
 
     faceDetected = false;
 
-    wrongObjectDetected = false;
+    detectedBooks = 0;
 
-    liveEvidenceValid = true;
-
-
-    scanText.textContent =
-        "✅ " +
-        targetComplaint.label +
-        " detected";
+    let bestConfidence = 0;
 
 
-    confidence.textContent =
-        formatConfidence(
-            result.confidence
+    predictions.forEach(
+    function(item) {
+
+        const score =
+        Number(item.score || 0);
+
+
+        if(
+            item.class === "person" &&
+            score >= .55
+        ) {
+
+            faceDetected = true;
+
+        }
+
+
+        if(
+            item.class === "book" &&
+            score >= .45
+        ) {
+
+            detectedBooks++;
+
+            if(score > bestConfidence) {
+
+                bestConfidence = score;
+
+            }
+
+        }
+
+    });
+
+
+    /*
+       BOOK COMPLAINT
+    */
+
+    if(
+        targetComplaint.type === "book"
+    ) {
+
+        if(faceDetected) {
+
+            liveEvidenceValid = false;
+
+
+            updateLiveMessage(
+                "🚫 Person detected — point camera only at books",
+                ""
+            );
+
+            updateCaptureButton();
+
+            return;
+
+        }
+
+
+        if(detectedBooks > 0) {
+
+            liveEvidenceValid = true;
+
+
+            let message;
+
+
+            if(detectedBooks >= 2) {
+
+                message =
+                "✅ Multiple books detected";
+
+            }
+
+            else {
+
+                message =
+                "✅ Book detected";
+
+            }
+
+
+            updateLiveMessage(
+                message,
+                Math.round(
+                    bestConfidence * 100
+                ) +
+                "% confidence"
+            );
+
+
+            updateCaptureButton();
+
+            return;
+
+        }
+
+
+        liveEvidenceValid = false;
+
+
+        updateLiveMessage(
+            "🔍 Book not detected",
+            "Move camera toward the book pile"
         );
+
+
+        updateCaptureButton();
+
+        return;
+
+    }
+
+
+    /*
+       OTHER COMPLAINTS
+    */
+
+    if(faceDetected) {
+
+        liveEvidenceValid = false;
+
+
+        updateLiveMessage(
+            "🚫 Person detected — capture blocked",
+            "Privacy protection"
+        );
+
+
+        updateCaptureButton();
+
+        return;
+
+    }
+
+
+    /*
+       For other complaint types,
+       show AI scanning status.
+
+       Book detection is the active
+       object detector in this version.
+    */
+
+    liveEvidenceValid = false;
+
+
+    updateLiveMessage(
+        "🔍 AI scanning evidence...",
+        "Target-specific model required"
+    );
 
 
     updateCaptureButton();
@@ -2010,127 +1422,79 @@ function updateLiveStatus(result) {
 }
 
 
-/* =====================================
-   CONFIDENCE FORMAT
-===================================== */
+/* =================================================
+   UPDATE LIVE MESSAGE
+================================================= */
 
-function formatConfidence(value) {
+function updateLiveMessage(
+    message,
+    confidence
+) {
 
-    if(value === undefined) {
-
-        return "";
-
-    }
-
-
-    let number =
-        Number(value);
+    document.getElementById(
+        "liveScanText"
+    ).textContent =
+    message;
 
 
-    if(number <= 1) {
-
-        number =
-            number * 100;
-
-    }
-
-
-    return (
-        number.toFixed(0) +
-        "% confidence"
-    );
+    document.getElementById(
+        "liveConfidence"
+    ).textContent =
+    confidence;
 
 }
 
 
-/* =====================================
-   UPDATE CAPTURE BUTTON
-===================================== */
+/* =================================================
+   CAPTURE BUTTON
+================================================= */
 
 function updateCaptureButton() {
 
     const button =
-        document.getElementById(
-            "captureBtn"
-        );
+    document.getElementById(
+        "captureBtn"
+    );
 
 
-    const canCapture =
-        cameraStream &&
-        targetComplaint &&
-        liveEvidenceValid &&
-        !faceDetected &&
-        !wrongObjectDetected;
+    const allowed =
+    cameraStream &&
+    targetComplaint &&
+    liveEvidenceValid &&
+    !faceDetected;
 
 
     button.disabled =
-        !canCapture;
+    !allowed;
 
 
-    if(canCapture) {
+    if(allowed) {
 
         button.textContent =
-            "● Capture Verified Evidence";
+        "● Capture Verified Evidence";
 
     }
 
     else {
 
         button.textContent =
-            "🔒 Evidence Not Verified";
+        "🔒 Evidence Not Detected";
 
     }
 
 }
 
 
-/* =====================================
+/* =================================================
    CAPTURE PHOTO
-===================================== */
+================================================= */
 
 function capturePhoto() {
-
-    /*
-       SECURITY CHECKS
-    */
 
     if(!cameraStream) {
 
         alert(
-            "Please start the camera first."
-        );
-
-        return;
-
-    }
-
-
-    if(!targetComplaint) {
-
-        alert(
-            "Please describe the complaint first."
-        );
-
-        return;
-
-    }
-
-
-    if(faceDetected) {
-
-        alert(
-            "Face detected. Please point the camera only at the reported problem."
-        );
-
-        return;
-
-    }
-
-
-    if(wrongObjectDetected) {
-
-        alert(
-            "Unrelated object detected. Please capture only the reported problem."
+            "Please start the camera."
         );
 
         return;
@@ -2141,7 +1505,18 @@ function capturePhoto() {
     if(!liveEvidenceValid) {
 
         alert(
-            "AI has not verified the reported problem in the camera frame yet."
+            "AI has not detected the required evidence yet."
+        );
+
+        return;
+
+    }
+
+
+    if(faceDetected) {
+
+        alert(
+            "Person detected. Please capture only the reported object."
         );
 
         return;
@@ -2150,91 +1525,262 @@ function capturePhoto() {
 
 
     const video =
-        document.getElementById(
-            "camera"
-        );
+    document.getElementById(
+        "camera"
+    );
 
 
     const canvas =
-        document.getElementById(
-            "canvas"
-        );
+    document.getElementById(
+        "canvas"
+    );
 
 
     canvas.width =
-        video.videoWidth;
+    video.videoWidth;
+
 
     canvas.height =
-        video.videoHeight;
+    video.videoHeight;
 
 
     const ctx =
-        canvas.getContext(
-            "2d"
-        );
+    canvas.getContext("2d");
 
 
     ctx.drawImage(
-
         video,
-
         0,
-
         0,
-
         canvas.width,
-
         canvas.height
-
     );
 
 
     capturedImageData =
-        canvas.toDataURL(
-            "image/jpeg",
-            0.9
-        );
+    canvas.toDataURL(
+        "image/jpeg",
+        .9
+    );
 
 
     const now =
-        new Date();
+    new Date();
 
 
     captureDate =
-        now.toLocaleDateString(
-            "en-IN"
-        );
+    now.toLocaleDateString(
+        "en-IN"
+    );
 
 
     captureTime =
-        now.toLocaleTimeString(
-            "en-IN"
-        );
+    now.toLocaleTimeString(
+        "en-IN"
+    );
 
 
     document.getElementById(
         "captureDate"
     ).textContent =
-        captureDate;
+    captureDate;
 
 
     document.getElementById(
         "captureTime"
     ).textContent =
-        captureTime;
+    captureTime;
+
+
+    document.getElementById(
+        "verificationStatus"
+    ).textContent =
+    "🔍 Verifying captured evidence...";
+
+
+    document.getElementById(
+        "verificationScore"
+    ).textContent =
+    "Running final browser AI check.";
 
 
     getLocation();
 
 
-    verifyEvidenceAI();
+    finalEvidenceVerification();
 
 }
 
 
-/* =====================================
+/* =================================================
+   FINAL EVIDENCE VERIFICATION
+================================================= */
+
+async function finalEvidenceVerification() {
+
+    if(!aiModel) {
+
+        evidenceVerified = false;
+
+        return;
+
+    }
+
+
+    try {
+
+        const image =
+        new Image();
+
+
+        image.src =
+        capturedImageData;
+
+
+        await new Promise(
+            resolve =>
+            image.onload = resolve
+        );
+
+
+        const predictions =
+        await aiModel.detect(image);
+
+
+        let books = 0;
+
+        let person = false;
+
+        let confidence = 0;
+
+
+        predictions.forEach(
+        function(item) {
+
+            const score =
+            Number(item.score || 0);
+
+
+            if(
+                item.class === "book" &&
+                score >= .45
+            ) {
+
+                books++;
+
+
+                if(score > confidence) {
+
+                    confidence = score;
+
+                }
+
+            }
+
+
+            if(
+                item.class === "person" &&
+                score >= .55
+            ) {
+
+                person = true;
+
+            }
+
+        });
+
+
+        if(person) {
+
+            evidenceVerified = false;
+
+
+            document.getElementById(
+                "verificationStatus"
+            ).textContent =
+            "🚫 Evidence rejected";
+
+
+            document.getElementById(
+                "verificationScore"
+            ).textContent =
+            "Person detected in evidence.";
+
+            return;
+
+        }
+
+
+        if(
+            targetComplaint.type === "book" &&
+            books > 0
+        ) {
+
+            evidenceVerified = true;
+
+
+            document.getElementById(
+                "verificationStatus"
+            ).textContent =
+            "✅ Evidence verified";
+
+
+            document.getElementById(
+                "verificationScore"
+            ).textContent =
+            books +
+            " book object(s) detected • " +
+            Math.round(confidence * 100) +
+            "% confidence";
+
+
+            document.getElementById(
+                "submitBtn"
+            ).disabled =
+            false;
+
+
+            document.getElementById(
+                "submitBtn"
+            ).textContent =
+            "🚀 Submit Complaint";
+
+
+            return;
+
+        }
+
+
+        evidenceVerified = false;
+
+
+        document.getElementById(
+            "verificationStatus"
+        ).textContent =
+        "🚫 Evidence verification failed";
+
+
+        document.getElementById(
+            "verificationScore"
+        ).textContent =
+        "Required evidence was not detected.";
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        evidenceVerified = false;
+
+    }
+
+}
+
+
+/* =================================================
    GPS
-===================================== */
+================================================= */
 
 function getLocation() {
 
@@ -2249,350 +1795,147 @@ function getLocation() {
     }
 
 
-    navigator.geolocation
-    .getCurrentPosition(
+    navigator.geolocation.getCurrentPosition(
 
-        function(position) {
+    function(position) {
 
-            latitude =
-                position.coords.latitude;
-
-            longitude =
-                position.coords.longitude;
+        latitude =
+        position.coords.latitude;
 
 
-            document.getElementById(
-                "latitude"
-            ).textContent =
-                latitude.toFixed(6);
+        longitude =
+        position.coords.longitude;
 
 
-            document.getElementById(
-                "longitude"
-            ).textContent =
-                longitude.toFixed(6);
-
-        },
-
-        function(error) {
-
-            alert(
-                "Please allow location permission."
-            );
-
-            console.error(error);
-
-        },
-
-        {
-
-            enableHighAccuracy: true,
-
-            timeout: 10000,
-
-            maximumAge: 0
-
-        }
-
-    );
-
-}
-
-
-/* =====================================
-   FINAL AI EVIDENCE CHECK
-===================================== */
-
-async function verifyEvidenceAI() {
-
-    evidenceVerified = false;
-
-
-    const status =
         document.getElementById(
-            "verificationStatus"
-        );
+            "latitude"
+        ).textContent =
+        latitude.toFixed(6);
 
 
-    const score =
         document.getElementById(
-            "verificationScore"
-        );
+            "longitude"
+        ).textContent =
+        longitude.toFixed(6);
 
+    },
 
-    const submit =
-        document.getElementById(
-            "submitBtn"
-        );
-
-
-    status.textContent =
-        "🔍 Analysing captured evidence...";
-
-
-    score.textContent =
-        "Checking target object, privacy and authenticity";
-
-
-    submit.disabled = true;
-
-
-    submit.textContent =
-        "🔍 AI Verifying...";
-
-
-    /*
-       At this point the live AI has already
-       confirmed the target.
-
-       A second backend endpoint should perform
-       final evidence verification.
-    */
-
-    try {
-
-        const response =
-            await fetch(
-                "/api/verify-evidence",
-                {
-
-                    method: "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json"
-
-                    },
-
-                    body: JSON.stringify({
-
-                        complaintType:
-                            targetComplaint.type,
-
-                        image:
-                            capturedImageData,
-
-                        latitude:
-                            latitude,
-
-                        longitude:
-                            longitude
-
-                    })
-
-                }
-            );
-
-
-        if(!response.ok) {
-
-            throw new Error(
-                "Verification server unavailable"
-            );
-
-        }
-
-
-        const result =
-            await response.json();
-
-
-        if(result.verified !== true) {
-
-            evidenceVerified = false;
-
-
-            status.textContent =
-                "🚫 Evidence verification failed";
-
-
-            score.textContent =
-                result.message ||
-                "AI could not verify the evidence.";
-
-
-            submit.disabled = true;
-
-
-            submit.textContent =
-                "🔒 Verification Failed";
-
-
-            return;
-
-        }
-
-
-        evidenceVerified = true;
-
-
-        status.textContent =
-            "✅ Evidence verified successfully";
-
-
-        score.textContent =
-            "Target evidence confirmed by AI";
-
-
-        submit.disabled = false;
-
-
-        submit.textContent =
-            "🚀 Submit Complaint";
-
-
-        analyzeSeverity();
-
-    }
-
-    catch(error) {
+    function(error) {
 
         console.error(error);
 
 
-        /*
-           IMPORTANT:
+        alert(
+            "Please allow location permission."
+        );
 
-           Do not mark evidence as verified
-           when the real backend is unavailable.
-        */
+    },
 
-        evidenceVerified = false;
+    {
 
+        enableHighAccuracy:true,
 
-        status.textContent =
-            "⚠️ AI verification server unavailable";
+        timeout:10000,
 
+        maximumAge:0
 
-        score.textContent =
-            "Evidence cannot be submitted until AI verification is available.";
-
-
-        submit.disabled = true;
-
-
-        submit.textContent =
-            "🔒 Waiting for AI Verification";
-
-    }
+    });
 
 }
 
 
-/* =====================================
-   AI SEVERITY
-===================================== */
+/* =================================================
+   SEVERITY
+================================================= */
 
 function analyzeSeverity() {
 
     const text =
-        document.getElementById(
-            "description"
-        ).value.toLowerCase();
+    document.getElementById(
+        "description"
+    ).value.toLowerCase();
 
 
     let severity =
-        "Medium";
+    "Medium";
 
 
     let score =
-        5;
+    5;
 
 
     if(
-
         text.includes("danger") ||
-
         text.includes("accident") ||
-
         text.includes("major") ||
-
-        text.includes("large pothole") ||
-
-        text.includes("burst pipeline")
-
+        text.includes("emergency")
     ) {
 
         severity =
-            "Critical";
+        "Critical";
 
         score =
-            9;
+        9;
 
     }
 
     else if(
-
-        text.includes("leak") ||
-
-        text.includes("garbage") ||
-
-        text.includes("broken") ||
-
-        text.includes("overflow")
-
+        text.includes("large") ||
+        text.includes("dumped") ||
+        text.includes("overflow") ||
+        text.includes("broken")
     ) {
 
         severity =
-            "High";
+        "High";
 
         score =
-            8;
+        8;
 
     }
 
     else if(
-
         text.includes("minor") ||
-
         text.includes("small")
-
     ) {
 
         severity =
-            "Low";
+        "Low";
 
         score =
-            3;
+        3;
 
     }
 
 
-    const box =
-        document.getElementById(
-            "severityBox"
-        );
-
-
-    box.innerHTML = `
+    document.getElementById(
+        "severityBox"
+    ).innerHTML = `
 
         <div
-            class="severity-dot"
-            style="
-            background:#22c55e;
-            box-shadow:
-            0 0 12px #22c55e;
-            ">
+        class="severity-dot"
+        style="
+        background:#22c55e;
+        box-shadow:0 0 12px #22c55e;
+        ">
         </div>
 
         <div>
 
-            <strong>
-                ${severity}
-            </strong>
+        <strong>
+        ${severity}
+        </strong>
 
-            <p
-                style="
-                margin:4px 0 0;
-                color:#94a3b8;
-                font-size:12px;
-                ">
+        <p style="
+        margin:4px 0;
+        color:#94a3b8;
+        font-size:12px;
+        ">
 
-                AI Priority Score:
-                ${score}/10
+        AI Priority Score:
+        ${score}/10
 
-            </p>
+        </p>
 
         </div>
 
@@ -2601,16 +1944,16 @@ function analyzeSeverity() {
 }
 
 
-/* =====================================
-   SUBMIT
-===================================== */
+/* =================================================
+   SUBMIT COMPLAINT
+================================================= */
 
 function submitComplaint() {
 
     const description =
-        document.getElementById(
-            "description"
-        ).value.trim();
+    document.getElementById(
+        "description"
+    ).value.trim();
 
 
     if(!description) {
@@ -2627,7 +1970,7 @@ function submitComplaint() {
     if(!targetComplaint) {
 
         alert(
-            "AI could not identify the complaint type."
+            "Complaint type could not be identified."
         );
 
         return;
@@ -2671,63 +2014,57 @@ function submitComplaint() {
     }
 
 
-    /*
-       Complaint object
-    */
-
     const complaint = {
 
         id:
-            "AA28-" +
-            Date.now(),
+        "AA28-" +
+        Date.now(),
 
         description:
-            description,
+        description,
 
         complaintType:
-            targetComplaint.type,
+        targetComplaint.type,
 
         complaintLabel:
-            targetComplaint.label,
+        targetComplaint.label,
 
         image:
-            capturedImageData,
+        capturedImageData,
 
         latitude:
-            latitude,
+        latitude,
 
         longitude:
-            longitude,
+        longitude,
 
         captureDate:
-            captureDate,
+        captureDate,
 
         captureTime:
-            captureTime,
+        captureTime,
 
         status:
-            "Submitted",
+        "Submitted",
 
         aiVerified:
-            true,
+        true,
+
+        detectedObjects:
+        detectedBooks,
 
         createdAt:
-            new Date().toISOString()
+        new Date().toISOString()
 
     };
 
 
-    /*
-       Save complaint locally
-       until backend database is connected.
-    */
-
     let complaints =
-        JSON.parse(
-            localStorage.getItem(
-                "aa28_complaints"
-            )
-        ) || [];
+    JSON.parse(
+        localStorage.getItem(
+            "aa28_complaints"
+        )
+    ) || [];
 
 
     complaints.push(
@@ -2736,28 +2073,25 @@ function submitComplaint() {
 
 
     localStorage.setItem(
-
         "aa28_complaints",
-
         JSON.stringify(
             complaints
         )
-
     );
 
 
     alert(
-        "Complaint submitted successfully!"
+        "✅ Complaint submitted successfully!"
     );
 
 
     /*
-       If tracking page exists,
+       If tracking.html exists,
        open it.
     */
 
     window.location.href =
-        "tracking.html";
+    "tracking.html";
 
 }
 
