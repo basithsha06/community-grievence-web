@@ -1,0 +1,3454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Civic AI | Admin Control Center</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(34,197,94,.08), transparent 30%),
+        radial-gradient(circle at 90% 10%, rgba(14,165,233,.08), transparent 30%),
+        #050b14;
+    color: #f8fafc;
+}
+
+button,
+input,
+select {
+    font-family: inherit;
+}
+
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 250px;
+    background: #08111e;
+    border-right: 1px solid #1e293b;
+    padding: 25px 18px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 35px;
+}
+
+.logo-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg,#22c55e,#0ea5e9);
+    font-size: 22px;
+}
+
+.logo h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.logo p {
+    margin: 3px 0 0;
+    font-size: 11px;
+    color: #64748b;
+}
+
+.nav-title {
+    color: #475569;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 20px 10px 8px;
+}
+
+.nav-item {
+    padding: 13px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.nav-item.active,
+.nav-item:hover {
+    background: rgba(34,197,94,.1);
+    color: #4ade80;
+}
+
+.logout {
+    position: absolute;
+    bottom: 25px;
+    left: 18px;
+    right: 18px;
+}
+
+/* MAIN */
+
+.main {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    padding: 30px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+.header p {
+    color: #64748b;
+    margin: 6px 0 0;
+}
+
+.admin-badge {
+    padding: 10px 15px;
+    border-radius: 20px;
+    background: rgba(34,197,94,.1);
+    color: #4ade80;
+    border: 1px solid rgba(34,197,94,.2);
+}
+
+/* STATS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat {
+    background: #0b1624;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.stat small {
+    color: #64748b;
+}
+
+.stat h2 {
+    margin: 8px 0 0;
+    font-size: 28px;
+}
+
+.green { color: #4ade80; }
+.red { color: #f87171; }
+.orange { color: #fb923c; }
+.yellow { color: #facc15; }
+.blue { color: #38bdf8; }
+
+/* CONTROL */
+
+.control-panel {
+    background: #0b1624;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 20px;
+
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.search {
+    flex: 1;
+    min-width: 220px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #243449;
+    background: #07111e;
+    color: white;
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: #22c55e;
+}
+
+/* WORKER FORM */
+
+.worker-form {
+    background: #07111e;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 15px;
+}
+
+.worker-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.worker-field label {
+    display: block;
+    color: #94a3b8;
+    font-size: 11px;
+    margin-bottom: 6px;
+}
+
+.worker-add-btn {
+    background: #15803d;
+    margin-top: 15px;
+}
+
+/* SECTION */
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 25px 0 15px;
+}
+
+.section-header h2 {
+    margin: 0;
+}
+
+.section-header span {
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* COMPLAINT */
+
+.complaint-group {
+    background: #0b1624;
+    border: 1px solid #243449;
+    border-radius: 18px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.group-header {
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid #1e293b;
+}
+
+.group-title {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.issue-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111827;
+    font-size: 20px;
+}
+
+.group-title h3 {
+    margin: 0;
+}
+
+.group-title p {
+    margin: 5px 0 0;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.report-count {
+    padding: 8px 12px;
+    border-radius: 20px;
+    background: rgba(14,165,233,.1);
+    color: #38bdf8;
+    font-size: 12px;
+}
+
+.main-complaint {
+    padding: 18px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.info {
+    background: #07111e;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.info small {
+    display: block;
+    color: #64748b;
+    font-size: 10px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.info strong {
+    font-size: 13px;
+}
+
+.evidence-image {
+    width: 190px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: 8px;
+    border: 1px solid #243449;
+}
+
+/* BADGES */
+
+.badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    margin-right: 5px;
+}
+
+.badge-green {
+    background: rgba(34,197,94,.1);
+    color: #4ade80;
+}
+
+.badge-red {
+    background: rgba(239,68,68,.1);
+    color: #f87171;
+}
+
+.badge-orange {
+    background: rgba(249,115,22,.1);
+    color: #fb923c;
+}
+
+.badge-blue {
+    background: rgba(14,165,233,.1);
+    color: #38bdf8;
+}
+
+.badge-yellow {
+    background: rgba(250,204,21,.1);
+    color: #facc15;
+}
+
+/* BUTTONS */
+
+.actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.action-btn {
+    border: none;
+    border-radius: 9px;
+    padding: 10px 13px;
+    cursor: pointer;
+    color: white;
+    font-size: 12px;
+}
+
+.view-btn {
+    background: #1d4ed8;
+}
+
+.duplicate-btn {
+    background: #7c3aed;
+}
+
+.resolve-btn {
+    background: #15803d;
+}
+
+.delete-btn {
+    background: #991b1b;
+}
+
+.warning-btn {
+    background: #b45309;
+}
+
+/* DUPLICATES */
+
+.duplicates {
+    display: none;
+    padding: 15px 18px;
+    background: #07111e;
+    border-top: 1px solid #1e293b;
+}
+
+.duplicate-item {
+    padding: 12px;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+.duplicate-item small {
+    color: #64748b;
+}
+
+/* GENERIC CARD */
+
+.data-card {
+    background: #0b1624;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 12px;
+}
+
+.data-card h3 {
+    margin: 0 0 8px;
+}
+
+.data-card p {
+    color: #94a3b8;
+    margin: 6px 0;
+}
+
+.data-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.empty {
+    padding: 50px;
+    text-align: center;
+    background: #0b1624;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    color: #64748b;
+}
+
+/* MOBILE */
+
+@media(max-width:1100px) {
+
+    .stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .info-grid,
+    .data-grid,
+    .worker-form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width:750px) {
+
+    .sidebar {
+        width: 70px;
+        padding: 15px 10px;
+    }
+
+    .logo-text,
+    .nav-text {
+        display: none;
+    }
+
+    .main {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+        padding: 18px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width:500px) {
+
+    .stats,
+    .info-grid,
+    .data-grid,
+    .worker-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .header {
+        align-items: flex-start;
+        gap: 10px;
+        flex-direction: column;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="dashboard">
+
+
+<!-- =========================
+     SIDEBAR
+========================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            ⚡
+        </div>
+
+        <div class="logo-text">
+
+            <h2>Civic AI</h2>
+
+            <p>Admin Control</p>
+
+        </div>
+
+    </div>
+
+
+    <div class="nav-title">
+        MANAGEMENT
+    </div>
+
+
+    <div class="nav-item active"
+         onclick="showSection('complaints', this)">
+        📊 <span class="nav-text">Complaints</span>
+    </div>
+
+
+    <div class="nav-item"
+         onclick="showSection('duplicates', this)">
+        🔁 <span class="nav-text">Duplicate Issues</span>
+    </div>
+
+
+    <div class="nav-item"
+         onclick="showSection('escalations', this)">
+        🚨 <span class="nav-text">Escalations</span>
+    </div>
+
+
+    <div class="nav-item"
+         onclick="showSection('hotspots', this)">
+        📍 <span class="nav-text">Hotspots</span>
+    </div>
+
+
+    <div class="nav-title">
+        SYSTEM
+    </div>
+
+
+    <div class="nav-item"
+         onclick="showSection('citizens', this)">
+        👥 <span class="nav-text">Citizens</span>
+    </div>
+
+
+    <div class="nav-item"
+         onclick="showSection('workers', this)">
+        👷 <span class="nav-text">Workers</span>
+    </div>
+
+
+    <button
+        class="action-btn delete-btn logout"
+        onclick="logoutAdmin()">
+
+        🚪 <span class="nav-text">
+            Logout
+        </span>
+
+    </button>
+
+</aside>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="main">
+
+
+<div class="header">
+
+    <div>
+
+        <h1 id="pageTitle">
+            Civic AI
+        </h1>
+
+        <p id="pageSubtitle">
+            Smart Civic Complaint Management
+        </p>
+
+    </div>
+
+    <div class="admin-badge">
+        🟢 ADMIN ONLINE
+    </div>
+
+</div>
+
+
+<!-- =========================
+     STATS
+========================= -->
+
+<div class="stats">
+
+    <div class="stat">
+        <small>Total Reports</small>
+        <h2 id="totalComplaints" class="blue">0</h2>
+    </div>
+
+    <div class="stat">
+        <small>Critical</small>
+        <h2 id="criticalComplaints" class="red">0</h2>
+    </div>
+
+    <div class="stat">
+        <small>High Priority</small>
+        <h2 id="highComplaints" class="orange">0</h2>
+    </div>
+
+    <div class="stat">
+        <small>Duplicate Reports</small>
+        <h2 id="duplicateComplaints" class="yellow">0</h2>
+    </div>
+
+    <div class="stat">
+        <small>AI Verified</small>
+        <h2 id="verifiedComplaints" class="green">0</h2>
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     COMPLAINTS SECTION
+===================================================== -->
+
+<section id="complaintsSection" class="section active">
+
+    <div class="control-panel">
+
+        <div class="search">
+
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="🔎 Search complaint, ID or location..."
+                oninput="loadComplaints()">
+
+        </div>
+
+
+        <div style="min-width:180px;">
+
+            <select
+                id="typeFilter"
+                onchange="loadComplaints()">
+
+                <option value="all">
+                    All Complaint Types
+                </option>
+
+                <option value="pipeline">
+                    Pipeline / Water Leak
+                </option>
+
+                <option value="pothole">
+                    Pothole / Road Damage
+                </option>
+
+                <option value="garbage">
+                    Garbage / Waste
+                </option>
+
+                <option value="streetlight">
+                    Streetlight
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div style="min-width:160px;">
+
+            <select
+                id="priorityFilter"
+                onchange="loadComplaints()">
+
+                <option value="all">
+                    All Priority
+                </option>
+
+                <option value="Critical">
+                    Critical
+                </option>
+
+                <option value="High">
+                    High
+                </option>
+
+                <option value="Medium">
+                    Medium
+                </option>
+
+                <option value="Low">
+                    Low
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div class="section-header">
+
+        <h2>Complaint Issues</h2>
+
+        <span id="resultCount">
+            0 issues
+        </span>
+
+    </div>
+
+
+    <div id="complaintList"></div>
+
+</section>
+
+
+<!-- =====================================================
+     DUPLICATES SECTION
+===================================================== -->
+
+<section id="duplicatesSection" class="section">
+
+    <div class="section-header">
+
+        <h2>🔁 Duplicate Issues</h2>
+
+        <span id="duplicateSectionCount">
+            0 duplicate reports
+        </span>
+
+    </div>
+
+    <div id="duplicateList"></div>
+
+</section>
+
+
+<!-- =====================================================
+     ESCALATIONS SECTION
+===================================================== -->
+
+<section id="escalationsSection" class="section">
+
+    <div class="section-header">
+
+        <h2>🚨 Escalations</h2>
+
+        <span id="escalationCount">
+            0 escalations
+        </span>
+
+    </div>
+
+    <div id="escalationList"></div>
+
+</section>
+
+
+<!-- =====================================================
+     HOTSPOTS SECTION
+===================================================== -->
+
+<section id="hotspotsSection" class="section">
+
+    <div class="section-header">
+
+        <h2>📍 Complaint Hotspots</h2>
+
+        <span id="hotspotCount">
+            0 hotspots
+        </span>
+
+    </div>
+
+    <div id="hotspotList"></div>
+
+</section>
+
+
+<!-- =====================================================
+     CITIZENS SECTION
+===================================================== -->
+
+<section id="citizensSection" class="section">
+
+    <div class="section-header">
+
+        <h2>👥 Citizens</h2>
+
+        <span id="citizenCount">
+            0 citizens
+        </span>
+
+    </div>
+
+    <div id="citizenList"></div>
+
+</section>
+
+
+<!-- =====================================================
+     WORKERS SECTION
+===================================================== -->
+
+<section id="workersSection" class="section">
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>👷 Workers</h2>
+
+            <span>
+                Manage field workers and resolution teams
+            </span>
+
+        </div>
+
+        <span id="workerCount">
+            0 workers
+        </span>
+
+    </div>
+
+
+    <!-- ADD WORKER -->
+
+    <div class="data-card">
+
+        <h3>➕ Add Worker</h3>
+
+        <p>
+            Add field worker details for civic issue resolution.
+        </p>
+
+
+        <div class="worker-form">
+
+            <div class="worker-form-grid">
+
+
+                <div class="worker-field">
+
+                    <label>
+                        Worker ID
+                    </label>
+
+                    <input
+                        id="workerId"
+                        type="text"
+                        placeholder="Example: WRK001">
+
+                </div>
+
+
+                <div class="worker-field">
+
+                    <label>
+                        Worker Name
+                    </label>
+
+                    <input
+                        id="workerName"
+                        type="text"
+                        placeholder="Enter worker name">
+
+                </div>
+
+
+                <div class="worker-field">
+
+                    <label>
+                        Mobile Number
+                    </label>
+
+                    <input
+                        id="workerMobile"
+                        type="tel"
+                        placeholder="Enter mobile number">
+
+                </div>
+
+
+                <div class="worker-field">
+
+                    <label>
+                        Department
+                    </label>
+
+                    <select id="workerDepartment">
+
+                        <option value="">
+                            Select Department
+                        </option>
+
+                        <option value="Water Supply Department">
+                            Water Supply Department
+                        </option>
+
+                        <option value="Roads & Highways">
+                            Roads & Highways
+                        </option>
+
+                        <option value="Sanitation Department">
+                            Sanitation Department
+                        </option>
+
+                        <option value="Electrical Department">
+                            Electrical Department
+                        </option>
+
+                        <option value="Civic Administration">
+                            Civic Administration
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="worker-field">
+
+                    <label>
+                        Assigned Area
+                    </label>
+
+                    <input
+                        id="workerArea"
+                        type="text"
+                        placeholder="Example: Salem North">
+
+                </div>
+
+
+                <div class="worker-field">
+
+                    <label>
+                        Work Type
+                    </label>
+
+                    <select id="workerType">
+
+                        <option value="">
+                            Select Work Type
+                        </option>
+
+                        <option value="Water / Pipeline">
+                            Water / Pipeline
+                        </option>
+
+                        <option value="Road Maintenance">
+                            Road Maintenance
+                        </option>
+
+                        <option value="Garbage / Sanitation">
+                            Garbage / Sanitation
+                        </option>
+
+                        <option value="Electrical">
+                            Electrical
+                        </option>
+
+                        <option value="General Civic Work">
+                            General Civic Work
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="worker-field">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select id="workerStatus">
+
+                        <option value="Available">
+                            Available
+                        </option>
+
+                        <option value="Busy">
+                            Busy
+                        </option>
+
+                        <option value="Offline">
+                            Offline
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    class="action-btn worker-add-btn"
+                    onclick="addWorker()">
+
+                    ➕ Add Worker
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- WORKER LIST -->
+
+    <div id="workerList"></div>
+
+</section>
+
+
+</main>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   AUTH
+===================================================== */
+
+if (
+    localStorage.getItem("aa28_admin_logged")
+    !== "true"
+) {
+
+    window.location.href =
+        "admin-login.html";
+
+}
+
+
+/* =====================================================
+   SECTION NAVIGATION
+===================================================== */
+
+function showSection(section, clickedItem) {
+
+    const sections = [
+        "complaints",
+        "duplicates",
+        "escalations",
+        "hotspots",
+        "citizens",
+        "workers"
+    ];
+
+
+    sections.forEach(function(name) {
+
+        const element =
+            document.getElementById(
+                name + "Section"
+            );
+
+        if(element) {
+
+            element.classList.remove(
+                "active"
+            );
+
+        }
+
+    });
+
+
+    document
+        .querySelectorAll(".nav-item")
+        .forEach(function(item) {
+
+            item.classList.remove("active");
+
+        });
+
+
+    const selected =
+        document.getElementById(
+            section + "Section"
+        );
+
+
+    if(selected) {
+
+        selected.classList.add("active");
+
+    }
+
+
+    if(clickedItem) {
+
+        clickedItem.classList.add("active");
+
+    }
+
+
+    const titles = {
+
+        complaints: [
+            "Civic AI",
+            "Smart Civic Complaint Management"
+        ],
+
+        duplicates: [
+            "Duplicate Issues",
+            "Repeated complaints grouped as the same civic issue"
+        ],
+
+        escalations: [
+            "Escalations",
+            "Critical and SLA-related complaints requiring attention"
+        ],
+
+        hotspots: [
+            "Complaint Hotspots",
+            "Locations where repeated civic complaints are reported"
+        ],
+
+        citizens: [
+            "Citizens",
+            "Registered citizen accounts"
+        ],
+
+        workers: [
+            "Workers",
+            "Assigned field workers and resolution teams"
+        ]
+
+    };
+
+
+    if(titles[section]) {
+
+        document.getElementById(
+            "pageTitle"
+        ).textContent =
+            titles[section][0];
+
+        document.getElementById(
+            "pageSubtitle"
+        ).textContent =
+            titles[section][1];
+
+    }
+
+
+    if(section === "complaints")
+        loadComplaints();
+
+    if(section === "duplicates")
+        loadDuplicateIssues();
+
+    if(section === "escalations")
+        loadEscalations();
+
+    if(section === "hotspots")
+        loadHotspots();
+
+    if(section === "citizens")
+        loadCitizens();
+
+    if(section === "workers")
+        loadWorkers();
+
+}
+
+
+/* =====================================================
+   GET COMPLAINTS
+===================================================== */
+
+function getComplaints() {
+
+    return JSON.parse(
+        localStorage.getItem(
+            "aa28_complaints"
+        )
+    ) || [];
+
+}
+
+
+/* =====================================================
+   TYPE LABEL
+===================================================== */
+
+function getTypeLabel(type) {
+
+    const labels = {
+
+        pipeline:
+            "Pipeline / Water Leak",
+
+        pothole:
+            "Pothole / Road Damage",
+
+        garbage:
+            "Garbage / Waste",
+
+        streetlight:
+            "Streetlight"
+
+    };
+
+    return labels[type] ||
+           type ||
+           "General";
+
+}
+
+
+/* =====================================================
+   SEVERITY
+===================================================== */
+
+function calculatePriority(c) {
+
+    const text =
+        (c.description || "").toLowerCase();
+
+
+    if (
+        text.includes("danger") ||
+        text.includes("accident") ||
+        text.includes("burst") ||
+        text.includes("major") ||
+        text.includes("large")
+    ) {
+
+        return {
+            name: "Critical",
+            score: 9
+        };
+
+    }
+
+
+    if (
+        text.includes("leak") ||
+        text.includes("garbage") ||
+        text.includes("broken") ||
+        text.includes("overflow")
+    ) {
+
+        return {
+            name: "High",
+            score: 8
+        };
+
+    }
+
+
+    if (
+        text.includes("minor") ||
+        text.includes("small")
+    ) {
+
+        return {
+            name: "Low",
+            score: 3
+        };
+
+    }
+
+
+    return {
+        name: "Medium",
+        score: 5
+    };
+
+}
+
+
+/* =====================================================
+   DEPARTMENT
+===================================================== */
+
+function getDepartment(type) {
+
+    const departments = {
+
+        pipeline:
+            "Water Supply Department",
+
+        pothole:
+            "Roads & Highways",
+
+        garbage:
+            "Sanitation Department",
+
+        streetlight:
+            "Electrical Department"
+
+    };
+
+    return departments[type] ||
+           "Civic Administration";
+
+}
+
+
+/* =====================================================
+   NORMALIZE TEXT
+===================================================== */
+
+function normalizeText(text) {
+
+    return String(text || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+}
+
+
+/* =====================================================
+   DUPLICATE GROUPING
+===================================================== */
+
+function groupDuplicates(complaints) {
+
+    const groups = [];
+
+
+    complaints.forEach(function(c) {
+
+        const priority =
+            calculatePriority(c);
+
+
+        c.priority =
+            c.priority ||
+            priority.name;
+
+
+        c.priorityScore =
+            c.priorityScore ||
+            priority.score;
+
+
+        c.department =
+            c.department ||
+            getDepartment(
+                c.complaintType
+            );
+
+
+        let foundGroup = null;
+
+
+        for(
+            const group of groups
+        ) {
+
+            const main =
+                group.main;
+
+
+            const sameType =
+                main.complaintType ===
+                c.complaintType;
+
+
+            const sameLocation =
+                main.latitude &&
+                main.longitude &&
+                c.latitude &&
+                c.longitude &&
+                Math.abs(
+                    Number(main.latitude) -
+                    Number(c.latitude)
+                ) < 0.002 &&
+                Math.abs(
+                    Number(main.longitude) -
+                    Number(c.longitude)
+                ) < 0.002;
+
+
+            const textA =
+                normalizeText(
+                    main.description
+                );
+
+
+            const textB =
+                normalizeText(
+                    c.description
+                );
+
+
+            const similarText =
+                textA === textB ||
+                textA.includes(textB) ||
+                textB.includes(textA);
+
+
+            if(
+                sameType &&
+                (
+                    sameLocation ||
+                    similarText
+                )
+            ) {
+
+                foundGroup =
+                    group;
+
+                break;
+
+            }
+
+        }
+
+
+        if(foundGroup) {
+
+            foundGroup.items.push(c);
+
+        }
+
+        else {
+
+            groups.push({
+
+                main: c,
+                items: [c]
+
+            });
+
+        }
+
+    });
+
+
+    return groups;
+
+}
+
+
+/* =====================================================
+   LOAD COMPLAINTS
+===================================================== */
+
+function loadComplaints() {
+
+    const all =
+        getComplaints();
+
+
+    const searchElement =
+        document.getElementById(
+            "searchInput"
+        );
+
+
+    const typeElement =
+        document.getElementById(
+            "typeFilter"
+        );
+
+
+    const priorityElement =
+        document.getElementById(
+            "priorityFilter"
+        );
+
+
+    const search =
+        searchElement
+        ?
+        normalizeText(
+            searchElement.value
+        )
+        :
+        "";
+
+
+    const type =
+        typeElement
+        ?
+        typeElement.value
+        :
+        "all";
+
+
+    const priority =
+        priorityElement
+        ?
+        priorityElement.value
+        :
+        "all";
+
+
+    const filtered =
+        all.filter(function(c) {
+
+            const p =
+                calculatePriority(c);
+
+
+            const searchText =
+                normalizeText(
+                    [
+                        c.id,
+                        c.description,
+                        c.latitude,
+                        c.longitude,
+                        c.complaintLabel
+                    ].join(" ")
+                );
+
+
+            return (
+
+                (
+                    !search ||
+                    searchText.includes(search)
+                )
+
+                &&
+
+                (
+                    type === "all" ||
+                    c.complaintType === type
+                )
+
+                &&
+
+                (
+                    priority === "all" ||
+                    p.name === priority
+                )
+
+            );
+
+        });
+
+
+    const groups =
+        groupDuplicates(
+            filtered
+        );
+
+
+    updateStats(all);
+
+
+    document.getElementById(
+        "resultCount"
+    ).textContent =
+        groups.length +
+        " unique issues";
+
+
+    const list =
+        document.getElementById(
+            "complaintList"
+        );
+
+
+    if(!list)
+        return;
+
+
+    if(groups.length === 0) {
+
+        list.innerHTML = `
+
+            <div class="empty">
+
+                <h3>No complaints found</h3>
+
+                <p>
+                    Try changing the search or filters.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML = "";
+
+
+    groups
+    .slice()
+    .reverse()
+    .forEach(
+        function(group,index) {
+
+            renderGroup(
+                group,
+                list,
+                index
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   UPDATE STATS
+===================================================== */
+
+function updateStats(all) {
+
+    document.getElementById(
+        "totalComplaints"
+    ).textContent =
+        all.length;
+
+
+    document.getElementById(
+        "criticalComplaints"
+    ).textContent =
+        all.filter(
+            c =>
+                calculatePriority(c).name
+                === "Critical"
+        ).length;
+
+
+    document.getElementById(
+        "highComplaints"
+    ).textContent =
+        all.filter(
+            c =>
+                calculatePriority(c).name
+                === "High"
+        ).length;
+
+
+    document.getElementById(
+        "duplicateComplaints"
+    ).textContent =
+        Math.max(
+            0,
+            all.length -
+            groupDuplicates(all).length
+        );
+
+
+    document.getElementById(
+        "verifiedComplaints"
+    ).textContent =
+        all.filter(
+            c =>
+                c.aiVerified === true
+        ).length;
+
+}
+
+
+/* =====================================================
+   RENDER COMPLAINT GROUP
+===================================================== */
+
+function renderGroup(
+    group,
+    container,
+    index
+) {
+
+    const main =
+        group.main;
+
+
+    const duplicates =
+        group.items.slice(1);
+
+
+    const priority =
+        calculatePriority(main);
+
+
+    const type =
+        main.complaintType;
+
+
+    const typeLabel =
+        getTypeLabel(type);
+
+
+    const department =
+        getDepartment(type);
+
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "complaint-group";
+
+
+    let icon = "📋";
+
+
+    if(type === "pipeline")
+        icon = "💧";
+
+
+    if(type === "pothole")
+        icon = "🛣️";
+
+
+    if(type === "garbage")
+        icon = "🗑️";
+
+
+    if(type === "streetlight")
+        icon = "💡";
+
+
+    let priorityClass =
+        "badge-blue";
+
+
+    if(priority.name === "Critical")
+        priorityClass = "badge-red";
+
+
+    if(priority.name === "High")
+        priorityClass = "badge-orange";
+
+
+    if(priority.name === "Low")
+        priorityClass = "badge-green";
+
+
+    card.innerHTML = `
+
+        <div class="group-header">
+
+            <div class="group-title">
+
+                <div class="issue-icon">
+                    ${icon}
+                </div>
+
+                <div>
+
+                    <h3>
+                        ${escapeHTML(typeLabel)}
+                    </h3>
+
+                    <p>
+                        Main Complaint:
+                        ${escapeHTML(main.id)}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-count">
+
+                ${group.items.length}
+                report${group.items.length > 1 ? "s" : ""}
+
+            </div>
+
+        </div>
+
+
+        <div class="main-complaint">
+
+            <span class="badge ${priorityClass}">
+                ${priority.name}
+                ${priority.score}/10
+            </span>
+
+
+            <span class="badge badge-blue">
+                ${escapeHTML(department)}
+            </span>
+
+
+            <p>
+                <strong>Main Issue</strong>
+            </p>
+
+
+            <p>
+                ${escapeHTML(
+                    main.description ||
+                    "No description"
+                )}
+            </p>
+
+
+            <div class="info-grid">
+
+                <div class="info">
+
+                    <small>Status</small>
+
+                    <strong>
+                        ${escapeHTML(
+                            main.status ||
+                            "Submitted"
+                        )}
+                    </strong>
+
+                </div>
+
+
+                <div class="info">
+
+                    <small>Reports</small>
+
+                    <strong>
+                        ${group.items.length}
+                    </strong>
+
+                </div>
+
+
+                <div class="info">
+
+                    <small>Latitude</small>
+
+                    <strong>
+                        ${main.latitude ?? "-"}
+                    </strong>
+
+                </div>
+
+
+                <div class="info">
+
+                    <small>Longitude</small>
+
+                    <strong>
+                        ${main.longitude ?? "-"}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            ${
+                main.image
+                ?
+                `
+                <img
+                    class="evidence-image"
+                    src="${main.image}"
+                    alt="Complaint Evidence">
+                `
+                :
+                ""
+            }
+
+
+            <div class="actions">
+
+                <button
+                    class="action-btn view-btn"
+                    onclick="viewComplaint('${main.id}')">
+
+                    👁 View
+
+                </button>
+
+
+                ${
+                    duplicates.length > 0
+                    ?
+                    `
+                    <button
+                        class="action-btn duplicate-btn"
+                        onclick="toggleDuplicates(${index})">
+
+                        🔁 View
+                        ${duplicates.length}
+                        Duplicate${duplicates.length > 1 ? "s" : ""}
+
+                    </button>
+                    `
+                    :
+                    ""
+                }
+
+
+                <button
+                    class="action-btn resolve-btn"
+                    onclick="updateStatus('${main.id}','In Progress')">
+
+                    ⚙ Assign / Process
+
+                </button>
+
+
+                <button
+                    class="action-btn delete-btn"
+                    onclick="deleteComplaint('${main.id}')">
+
+                    🗑 Remove
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        ${
+            duplicates.length > 0
+            ?
+            `
+            <div
+                class="duplicates"
+                id="duplicates-${index}">
+
+                <strong>
+                    🔁 Duplicate Reports
+                </strong>
+
+                <p style="color:#64748b;font-size:12px;">
+
+                    These reports appear to describe
+                    the same civic issue.
+
+                </p>
+
+                ${duplicates.map(function(d) {
+
+                    return `
+
+                        <div class="duplicate-item">
+
+                            <strong>
+                                ${escapeHTML(d.id)}
+                            </strong>
+
+                            <p>
+                                ${escapeHTML(
+                                    d.description ||
+                                    "No description"
+                                )}
+                            </p>
+
+                            <small>
+
+                                📍
+                                ${d.latitude ?? "-"},
+                                ${d.longitude ?? "-"}
+
+                                &nbsp; | &nbsp;
+
+                                📅
+                                ${escapeHTML(
+                                    d.captureDate ||
+                                    "-"
+                                )}
+
+                            </small>
+
+
+                            <div class="actions">
+
+                                <button
+                                    class="action-btn duplicate-btn"
+                                    onclick="markAsDuplicate('${d.id}','${main.id}')">
+
+                                    🔁 Mark as Duplicate
+
+                                </button>
+
+
+                                <button
+                                    class="action-btn delete-btn"
+                                    onclick="deleteComplaint('${d.id}')">
+
+                                    🗑 Remove
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }).join("")}
+
+            </div>
+            `
+            :
+            ""
+        }
+
+    `;
+
+
+    container.appendChild(card);
+
+}
+
+
+/* =====================================================
+   DUPLICATE ISSUES
+===================================================== */
+
+function loadDuplicateIssues() {
+
+    const complaints =
+        getComplaints();
+
+
+    const groups =
+        groupDuplicates(
+            complaints
+        );
+
+
+    const list =
+        document.getElementById(
+            "duplicateList"
+        );
+
+
+    const duplicateCount =
+        complaints.length -
+        groups.length;
+
+
+    document.getElementById(
+        "duplicateSectionCount"
+    ).textContent =
+        duplicateCount +
+        " duplicate reports";
+
+
+    if(
+        duplicateCount <= 0
+    ) {
+
+        list.innerHTML = `
+
+            <div class="empty">
+
+                <h3>
+                    No duplicate issues
+                </h3>
+
+                <p>
+                    No repeated complaint groups were detected.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML = "";
+
+
+    groups.forEach(function(group) {
+
+        if(group.items.length <= 1)
+            return;
+
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "data-card";
+
+
+        card.innerHTML = `
+
+            <h3>
+                🔁 ${escapeHTML(
+                    getTypeLabel(
+                        group.main.complaintType
+                    )
+                )}
+            </h3>
+
+
+            <p>
+                Main Issue:
+                <strong>
+                    ${escapeHTML(
+                        group.main.id
+                    )}
+                </strong>
+            </p>
+
+
+            <p>
+                Total related reports:
+                <strong>
+                    ${group.items.length}
+                </strong>
+            </p>
+
+
+            <div class="actions">
+
+                ${group.items.slice(1).map(function(d) {
+
+                    return `
+
+                        <button
+                            class="action-btn duplicate-btn"
+                            onclick="markAsDuplicate('${d.id}','${group.main.id}')">
+
+                            🔁 ${escapeHTML(d.id)}
+
+                        </button>
+
+                    `;
+
+                }).join("")}
+
+            </div>
+
+        `;
+
+
+        list.appendChild(card);
+
+    });
+
+}
+
+
+/* =====================================================
+   ESCALATIONS
+===================================================== */
+
+function loadEscalations() {
+
+    const complaints =
+        getComplaints();
+
+
+    const escalations =
+        complaints.filter(function(c) {
+
+            const priority =
+                calculatePriority(c).name;
+
+
+            return (
+                priority === "Critical" ||
+                c.status === "Escalated" ||
+                c.status === "SLA Missed"
+            );
+
+        });
+
+
+    document.getElementById(
+        "escalationCount"
+    ).textContent =
+        escalations.length +
+        " escalations";
+
+
+    const list =
+        document.getElementById(
+            "escalationList"
+        );
+
+
+    if(escalations.length === 0) {
+
+        list.innerHTML = `
+
+            <div class="empty">
+
+                <h3>
+                    No escalations
+                </h3>
+
+                <p>
+                    No critical or SLA-related complaints currently require escalation.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML = "";
+
+
+    escalations.forEach(function(c) {
+
+        const priority =
+            calculatePriority(c);
+
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "data-card";
+
+
+        card.innerHTML = `
+
+            <h3>
+                🚨 ${escapeHTML(
+                    c.id
+                )}
+            </h3>
+
+
+            <p>
+                <strong>
+                    ${escapeHTML(
+                        getTypeLabel(
+                            c.complaintType
+                        )
+                    )}
+                </strong>
+            </p>
+
+
+            <p>
+                ${escapeHTML(
+                    c.description ||
+                    "No description"
+                )}
+            </p>
+
+
+            <p>
+                Priority:
+                <span class="badge badge-red">
+                    ${priority.name}
+                    ${priority.score}/10
+                </span>
+            </p>
+
+
+            <p>
+                Status:
+                <span class="badge badge-orange">
+                    ${escapeHTML(
+                        c.status ||
+                        "Submitted"
+                    )}
+                </span>
+            </p>
+
+
+            <div class="actions">
+
+                <button
+                    class="action-btn view-btn"
+                    onclick="viewComplaint('${c.id}')">
+
+                    👁 View
+
+                </button>
+
+
+                <button
+                    class="action-btn warning-btn"
+                    onclick="updateStatus('${c.id}','Escalated')">
+
+                    🚨 Escalate
+
+                </button>
+
+            </div>
+
+        `;
+
+
+        list.appendChild(card);
+
+    });
+
+}
+
+
+/* =====================================================
+   HOTSPOTS
+===================================================== */
+
+function loadHotspots() {
+
+    const complaints =
+        getComplaints();
+
+
+    const locations = {};
+
+
+    complaints.forEach(function(c) {
+
+        if(
+            c.latitude === null ||
+            c.latitude === undefined ||
+            c.longitude === null ||
+            c.longitude === undefined
+        ) {
+            return;
+        }
+
+
+        const lat =
+            Number(c.latitude);
+
+
+        const lng =
+            Number(c.longitude);
+
+
+        if(
+            Number.isNaN(lat) ||
+            Number.isNaN(lng)
+        ) {
+            return;
+        }
+
+
+        const key =
+            lat.toFixed(2) +
+            "," +
+            lng.toFixed(2);
+
+
+        if(!locations[key]) {
+
+            locations[key] = {
+
+                latitude: lat,
+                longitude: lng,
+                complaints: []
+
+            };
+
+        }
+
+
+        locations[key].complaints.push(c);
+
+    });
+
+
+    const hotspots =
+        Object.values(
+            locations
+        )
+        .filter(
+            location =>
+                location.complaints.length >= 2
+        )
+        .sort(
+            (a,b) =>
+                b.complaints.length -
+                a.complaints.length
+        );
+
+
+    document.getElementById(
+        "hotspotCount"
+    ).textContent =
+        hotspots.length +
+        " hotspots";
+
+
+    const list =
+        document.getElementById(
+            "hotspotList"
+        );
+
+
+    if(hotspots.length === 0) {
+
+        list.innerHTML = `
+
+            <div class="empty">
+
+                <h3>
+                    No hotspots detected
+                </h3>
+
+                <p>
+                    At least two complaints in the same approximate area are required.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML = "";
+
+
+    hotspots.forEach(function(hotspot,index) {
+
+        const types = {};
+
+
+        hotspot.complaints.forEach(function(c) {
+
+            const type =
+                getTypeLabel(
+                    c.complaintType
+                );
+
+
+            types[type] =
+                (types[type] || 0) + 1;
+
+        });
+
+
+        const typeText =
+            Object.entries(types)
+            .map(
+                ([type,count]) =>
+                    type +
+                    " (" +
+                    count +
+                    ")"
+            )
+            .join(", ");
+
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "data-card";
+
+
+        card.innerHTML = `
+
+            <h3>
+                📍 Hotspot #${index + 1}
+            </h3>
+
+
+            <p>
+
+                Location:
+                <strong>
+                    ${hotspot.latitude.toFixed(5)},
+                    ${hotspot.longitude.toFixed(5)}
+                </strong>
+
+            </p>
+
+
+            <p>
+
+                Reports:
+                <strong>
+                    ${hotspot.complaints.length}
+                </strong>
+
+            </p>
+
+
+            <p>
+
+                Issues:
+                ${escapeHTML(typeText)}
+
+            </p>
+
+        `;
+
+
+        list.appendChild(card);
+
+    });
+
+}
+
+
+/* =====================================================
+   CITIZENS
+===================================================== */
+
+function loadCitizens() {
+
+    const saved =
+        localStorage.getItem(
+            "aa28_citizen"
+        );
+
+
+    const list =
+        document.getElementById(
+            "citizenList"
+        );
+
+
+    if(!saved) {
+
+        document.getElementById(
+            "citizenCount"
+        ).textContent =
+            "0 citizens";
+
+
+        list.innerHTML = `
+
+            <div class="empty">
+
+                <h3>
+                    No registered citizens
+                </h3>
+
+                <p>
+                    Citizen registrations will appear here.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const citizen =
+        JSON.parse(saved);
+
+
+    document.getElementById(
+        "citizenCount"
+    ).textContent =
+        "1 citizen";
+
+
+    list.innerHTML = `
+
+        <div class="data-card">
+
+            <h3>
+                👤 ${escapeHTML(
+                    citizen.name
+                )}
+            </h3>
+
+
+            <p>
+                📱 Mobile:
+                ${escapeHTML(
+                    citizen.mobile
+                )}
+            </p>
+
+
+            <p>
+                ✉️ Email:
+                ${escapeHTML(
+                    citizen.email
+                )}
+            </p>
+
+
+            <p>
+                Account:
+                <span class="badge badge-green">
+                    Registered
+                </span>
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   WORKERS
+===================================================== */
+
+function loadWorkers() {
+
+    const workers =
+        JSON.parse(
+            localStorage.getItem(
+                "aa28_workers"
+            )
+        ) || [];
+
+
+    const list =
+        document.getElementById(
+            "workerList"
+        );
+
+
+    const count =
+        document.getElementById(
+            "workerCount"
+        );
+
+
+    if(count) {
+
+        count.textContent =
+            workers.length +
+            " workers";
+
+    }
+
+
+    if(!list)
+        return;
+
+
+    if(workers.length === 0) {
+
+        list.innerHTML = `
+
+            <div class="empty">
+
+                <h3>
+                    No workers registered
+                </h3>
+
+                <p>
+                    Use the Add Worker form above
+                    to register a field worker.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML = "";
+
+
+    workers
+    .slice()
+    .reverse()
+    .forEach(function(worker) {
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "data-card";
+
+
+        let statusClass =
+            "badge-green";
+
+
+        if(worker.status === "Busy") {
+
+            statusClass =
+                "badge-orange";
+
+        }
+
+
+        if(worker.status === "Offline") {
+
+            statusClass =
+                "badge-red";
+
+        }
+
+
+        card.innerHTML = `
+
+            <h3>
+                👷 ${escapeHTML(
+                    worker.name ||
+                    "Unnamed Worker"
+                )}
+            </h3>
+
+
+            <div class="info-grid">
+
+                <div class="info">
+
+                    <small>
+                        Worker ID
+                    </small>
+
+                    <strong>
+                        ${escapeHTML(
+                            worker.workerId ||
+                            "-"
+                        )}
+                    </strong>
+
+                </div>
+
+
+                <div class="info">
+
+                    <small>
+                        Mobile
+                    </small>
+
+                    <strong>
+                        ${escapeHTML(
+                            worker.mobile ||
+                            "-"
+                        )}
+                    </strong>
+
+                </div>
+
+
+                <div class="info">
+
+                    <small>
+                        Department
+                    </small>
+
+                    <strong>
+                        ${escapeHTML(
+                            worker.department ||
+                            "-"
+                        )}
+                    </strong>
+
+                </div>
+
+
+                <div class="info">
+
+                    <small>
+                        Assigned Area
+                    </small>
+
+                    <strong>
+                        ${escapeHTML(
+                            worker.area ||
+                            "-"
+                        )}
+                    </strong>
+
+                </div>
+
+
+                <div class="info">
+
+                    <small>
+                        Work Type
+                    </small>
+
+                    <strong>
+                        ${escapeHTML(
+                            worker.workType ||
+                            "-"
+                        )}
+                    </strong>
+
+                </div>
+
+
+                <div class="info">
+
+                    <small>
+                        Status
+                    </small>
+
+                    <strong>
+
+                        <span class="badge ${statusClass}">
+
+                            ${escapeHTML(
+                                worker.status ||
+                                "Available"
+                            )}
+
+                        </span>
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    class="action-btn delete-btn"
+                    onclick="deleteWorker('${worker.id}')">
+
+                    🗑 Remove Worker
+
+                </button>
+
+            </div>
+
+        `;
+
+
+        list.appendChild(card);
+
+    });
+
+}
+
+
+/* =====================================================
+   ADD WORKER
+===================================================== */
+
+function addWorker() {
+
+    const workerId =
+        document.getElementById(
+            "workerId"
+        ).value.trim();
+
+
+    const name =
+        document.getElementById(
+            "workerName"
+        ).value.trim();
+
+
+    const mobile =
+        document.getElementById(
+            "workerMobile"
+        ).value.trim();
+
+
+    const department =
+        document.getElementById(
+            "workerDepartment"
+        ).value;
+
+
+    const area =
+        document.getElementById(
+            "workerArea"
+        ).value.trim();
+
+
+    const workType =
+        document.getElementById(
+            "workerType"
+        ).value;
+
+
+    const status =
+        document.getElementById(
+            "workerStatus"
+        ).value;
+
+
+    if(
+        !workerId ||
+        !name ||
+        !mobile ||
+        !department ||
+        !area ||
+        !workType
+    ) {
+
+        alert(
+            "Please fill all worker details."
+        );
+
+        return;
+
+    }
+
+
+    let workers =
+        JSON.parse(
+            localStorage.getItem(
+                "aa28_workers"
+            )
+        ) || [];
+
+
+    const existing =
+        workers.find(
+            worker =>
+                String(worker.workerId)
+                .toLowerCase()
+                ===
+                workerId.toLowerCase()
+        );
+
+
+    if(existing) {
+
+        alert(
+            "Worker ID already exists."
+        );
+
+        return;
+
+    }
+
+
+    const worker = {
+
+        id:
+            "worker_" +
+            Date.now(),
+
+        workerId:
+            workerId,
+
+        name:
+            name,
+
+        mobile:
+            mobile,
+
+        department:
+            department,
+
+        area:
+            area,
+
+        workType:
+            workType,
+
+        status:
+            status
+
+    };
+
+
+    workers.push(worker);
+
+
+    localStorage.setItem(
+        "aa28_workers",
+        JSON.stringify(
+            workers
+        )
+    );
+
+
+    document.getElementById(
+        "workerId"
+    ).value = "";
+
+
+    document.getElementById(
+        "workerName"
+    ).value = "";
+
+
+    document.getElementById(
+        "workerMobile"
+    ).value = "";
+
+
+    document.getElementById(
+        "workerDepartment"
+    ).value = "";
+
+
+    document.getElementById(
+        "workerArea"
+    ).value = "";
+
+
+    document.getElementById(
+        "workerType"
+    ).value = "";
+
+
+    document.getElementById(
+        "workerStatus"
+    ).value = "Available";
+
+
+    alert(
+        "Worker added successfully!"
+    );
+
+
+    loadWorkers();
+
+}
+
+
+/* =====================================================
+   DELETE WORKER
+===================================================== */
+
+function deleteWorker(id) {
+
+    if(
+        !confirm(
+            "Remove this worker?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    let workers =
+        JSON.parse(
+            localStorage.getItem(
+                "aa28_workers"
+            )
+        ) || [];
+
+
+    workers =
+        workers.filter(
+            worker =>
+                worker.id !== id
+        );
+
+
+    localStorage.setItem(
+        "aa28_workers",
+        JSON.stringify(
+            workers
+        )
+    );
+
+
+    loadWorkers();
+
+}
+
+
+/* =====================================================
+   TOGGLE DUPLICATES
+===================================================== */
+
+function toggleDuplicates(index) {
+
+    const box =
+        document.getElementById(
+            "duplicates-" + index
+        );
+
+
+    if(!box)
+        return;
+
+
+    box.style.display =
+        box.style.display === "block"
+        ?
+        "none"
+        :
+        "block";
+
+}
+
+
+/* =====================================================
+   MARK DUPLICATE
+===================================================== */
+
+function markAsDuplicate(
+    duplicateId,
+    mainId
+) {
+
+    const complaints =
+        getComplaints();
+
+
+    const duplicate =
+        complaints.find(
+            c =>
+                c.id === duplicateId
+        );
+
+
+    if(!duplicate)
+        return;
+
+
+    duplicate.status =
+        "Duplicate";
+
+
+    duplicate.duplicateOf =
+        mainId;
+
+
+    localStorage.setItem(
+        "aa28_complaints",
+        JSON.stringify(
+            complaints
+        )
+    );
+
+
+    alert(
+        duplicateId +
+        " marked as duplicate of " +
+        mainId
+    );
+
+
+    loadComplaints();
+
+
+    if(
+        document.getElementById(
+            "duplicatesSection"
+        ).classList.contains("active")
+    ) {
+
+        loadDuplicateIssues();
+
+    }
+
+}
+
+
+/* =====================================================
+   UPDATE STATUS
+===================================================== */
+
+function updateStatus(
+    id,
+    status
+) {
+
+    const complaints =
+        getComplaints();
+
+
+    const complaint =
+        complaints.find(
+            c =>
+                c.id === id
+        );
+
+
+    if(!complaint)
+        return;
+
+
+    complaint.status =
+        status;
+
+
+    localStorage.setItem(
+        "aa28_complaints",
+        JSON.stringify(
+            complaints
+        )
+    );
+
+
+    alert(
+        "Complaint status updated to " +
+        status
+    );
+
+
+    loadComplaints();
+
+    loadEscalations();
+
+}
+
+
+/* =====================================================
+   VIEW COMPLAINT
+===================================================== */
+
+function viewComplaint(id) {
+
+    const complaints =
+        getComplaints();
+
+
+    const c =
+        complaints.find(
+            item =>
+                item.id === id
+        );
+
+
+    if(!c)
+        return;
+
+
+    alert(
+
+        "Complaint ID: " +
+        c.id +
+
+        "\n\nType: " +
+        getTypeLabel(
+            c.complaintType
+        ) +
+
+        "\n\nDescription: " +
+        (c.description || "-") +
+
+        "\n\nLocation: " +
+        (c.latitude ?? "-") +
+        ", " +
+        (c.longitude ?? "-") +
+
+        "\n\nStatus: " +
+        (c.status || "Submitted")
+
+    );
+
+}
+
+
+/* =====================================================
+   DELETE
+===================================================== */
+
+function deleteComplaint(id) {
+
+    if(
+        !confirm(
+            "Remove this complaint?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    let complaints =
+        getComplaints();
+
+
+    complaints =
+        complaints.filter(
+            c =>
+                c.id !== id
+        );
+
+
+    localStorage.setItem(
+        "aa28_complaints",
+        JSON.stringify(
+            complaints
+        )
+    );
+
+
+    loadComplaints();
+
+
+    loadDuplicateIssues();
+
+
+    loadEscalations();
+
+
+    loadHotspots();
+
+}
+
+
+/* =====================================================
+   HTML SAFETY
+===================================================== */
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logoutAdmin() {
+
+    localStorage.removeItem(
+        "aa28_admin_logged"
+    );
+
+
+    window.location.href =
+        "admin-login.html";
+
+}
+
+
+/* =====================================================
+   INITIAL LOAD
+===================================================== */
+
+loadComplaints();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Complaint Tracking | AA-28</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<div class="logo">AA-28</div>
+
+<div class="nav-title">
+Complaint Tracking
+</div>
+
+<button
+class="login-btn"
+onclick="window.location.href='citizen-dashboard.html'">
+Dashboard
+</button>
+
+</header>
+
+
+<main class="tracking-container">
+
+<h1>📍 Complaint Tracking</h1>
+
+<p class="dashboard-subtitle">
+Monitor your complaint status in real time.
+</p>
+
+
+<div id="complaintList"></div>
+
+</main>
+
+
+<script>
+
+const complaints =
+JSON.parse(
+localStorage.getItem(
+"aa28_complaints"
+)
+) || [];
+
+
+const container =
+document.getElementById(
+"complaintList"
+);
+
+
+if (complaints.length === 0) {
+
+container.innerHTML = `
+
+<div class="dashboard-box">
+
+<h3>No Complaints Yet</h3>
+
+<p>
+Submit a complaint to start tracking.
+</p>
+
+</div>
+
+`;
+
+}
+
+
+complaints.forEach(function(c) {
+
+container.innerHTML += `
+
+<div class="tracking-card">
+
+<div class="tracking-header">
+
+<h2>${c.id}</h2>
+
+<span class="status-badge">
+${c.status}
+</span>
+
+</div>
+
+
+<p>
+<strong>Issue:</strong>
+${c.description}
+</p>
+
+
+<p>
+<strong>Type:</strong>
+${c.type}
+</p>
+
+
+<p>
+<strong>Department:</strong>
+${c.department}
+</p>
+
+
+<p>
+<strong>Priority:</strong>
+${c.priority}
+(${c.priorityScore}/10)
+</p>
+
+
+<p>
+<strong>SLA:</strong>
+${c.sla}
+</p>
+
+
+<div class="timeline">
+
+<div class="timeline-item active">
+✓ Submitted
+</div>
+
+<div class="timeline-item active">
+✓ AI Analysed
+</div>
+
+<div class="timeline-item">
+Department Assigned
+</div>
+
+<div class="timeline-item">
+Worker Assigned
+</div>
+
+<div class="timeline-item">
+In Progress
+</div>
+
+<div class="timeline-item">
+Verification
+</div>
+
+<div class="timeline-item">
+Resolved
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+</script>
+
+</body>
+
+</html>

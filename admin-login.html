@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Admin Login | AA-28</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<div class="logo">
+AA-28
+</div>
+
+<div class="nav-title">
+Administrator Portal
+</div>
+
+<button
+class="login-btn"
+onclick="window.location.href='index.html'">
+Home
+</button>
+
+</header>
+
+
+<main class="auth-container">
+
+<div class="auth-card">
+
+<div class="auth-icon">
+🏢
+</div>
+
+<h1>Admin Login</h1>
+
+<p class="auth-description">
+Authorized administrators only.
+</p>
+
+
+<form id="adminLoginForm">
+
+<label>Admin ID</label>
+
+<input
+type="text"
+id="adminId"
+placeholder="Enter admin ID"
+required>
+
+
+<label>Password</label>
+
+<input
+type="password"
+id="adminPassword"
+placeholder="Enter password"
+required>
+
+
+<button
+class="auth-btn"
+type="submit">
+
+Admin Login
+
+</button>
+
+</form>
+
+
+<p class="admin-link">
+
+Citizen?
+
+<a href="citizen-auth.html">
+Citizen Login
+</a>
+
+</p>
+
+</div>
+
+</main>
+
+
+<script src="script.js"></script>
+
+<script>
+
+document
+.getElementById("adminLoginForm")
+.addEventListener(
+"submit",
+function(event) {
+
+event.preventDefault();
+
+loginAdmin(
+
+document.getElementById(
+"adminId"
+).value,
+
+document.getElementById(
+"adminPassword"
+).value
+
+);
+
+});
+
+</script>
+
+</body>
+
+</html>

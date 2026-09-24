@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Citizen Portal | AA-28</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<div class="logo">AA-28</div>
+
+<div class="nav-title">
+Citizen Portal
+</div>
+
+<button
+class="login-btn"
+onclick="window.location.href='index.html'">
+Home
+</button>
+
+</header>
+
+
+<main class="auth-container">
+
+<div class="auth-card">
+
+<div class="auth-icon">
+👤
+</div>
+
+<h1>Citizen Portal</h1>
+
+<p class="auth-description">
+Report community issues and track their resolution.
+</p>
+
+
+<div class="auth-tabs">
+
+<button
+id="loginTab"
+class="active-tab"
+onclick="showLogin()">
+Login
+</button>
+
+<button
+id="registerTab"
+onclick="showRegister()">
+Register
+</button>
+
+</div>
+
+
+<!-- LOGIN -->
+
+<form id="loginForm">
+
+<label>Email or Mobile</label>
+
+<input
+type="text"
+id="loginEmail"
+placeholder="Enter email or mobile"
+required>
+
+
+<label>Password</label>
+
+<input
+type="password"
+id="loginPassword"
+placeholder="Enter password"
+required>
+
+
+<button
+class="auth-btn"
+type="submit">
+Login
+</button>
+
+</form>
+
+
+<!-- REGISTER -->
+
+<form
+id="registerForm"
+style="display:none;">
+
+<label>Full Name</label>
+
+<input
+type="text"
+id="registerName"
+placeholder="Enter your name"
+required>
+
+
+<label>Mobile Number</label>
+
+<input
+type="tel"
+id="registerMobile"
+placeholder="Enter mobile number"
+required>
+
+
+<label>Email</label>
+
+<input
+type="email"
+id="registerEmail"
+placeholder="Enter email"
+required>
+
+
+<label>Password</label>
+
+<input
+type="password"
+id="registerPassword"
+placeholder="Create password"
+required>
+
+
+<button
+class="auth-btn"
+type="submit">
+Create Account
+</button>
+
+</form>
+
+
+<p class="admin-link">
+
+Are you an administrator?
+
+<a href="admin-login.html">
+Admin Login
+</a>
+
+</p>
+
+</div>
+
+</main>
+
+
+<script src="script.js"></script>
+
+<script>
+
+function showLogin() {
+
+document.getElementById("loginForm")
+.style.display = "block";
+
+document.getElementById("registerForm")
+.style.display = "none";
+
+document.getElementById("loginTab")
+.classList.add("active-tab");
+
+document.getElementById("registerTab")
+.classList.remove("active-tab");
+
+}
+
+
+function showRegister() {
+
+document.getElementById("loginForm")
+.style.display = "none";
+
+document.getElementById("registerForm")
+.style.display = "block";
+
+document.getElementById("loginTab")
+.classList.remove("active-tab");
+
+document.getElementById("registerTab")
+.classList.add("active-tab");
+
+}
+
+
+document
+.getElementById("registerForm")
+.addEventListener("submit", function(event) {
+
+event.preventDefault();
+
+registerCitizen(
+
+document.getElementById("registerName").value,
+
+document.getElementById("registerMobile").value,
+
+document.getElementById("registerEmail").value,
+
+document.getElementById("registerPassword").value
+
+);
+
+});
+
+
+document
+.getElementById("loginForm")
+.addEventListener("submit", function(event) {
+
+event.preventDefault();
+
+loginCitizen(
+
+document.getElementById("loginEmail").value,
+
+document.getElementById("loginPassword").value
+
+);
+
+});
+
+</script>
+
+</body>
+
+</html>

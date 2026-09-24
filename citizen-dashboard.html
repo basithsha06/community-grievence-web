@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Citizen Dashboard | AA-28</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<div class="logo">AA-28</div>
+
+<div class="nav-title">
+Citizen Dashboard
+</div>
+
+<button
+class="login-btn"
+onclick="citizenLogout()">
+Logout
+</button>
+
+</header>
+
+
+<main class="dashboard">
+
+<h1>Welcome, Citizen 👋</h1>
+
+<p class="dashboard-subtitle">
+Community Grievance Resolution Portal
+</p>
+
+
+<div class="stats-grid">
+
+<div class="stat-card">
+
+<span>📋</span>
+
+<h2 id="totalComplaints">
+0
+</h2>
+
+<p>My Complaints</p>
+
+</div>
+
+
+<div class="stat-card">
+
+<span>⏳</span>
+
+<h2>0</h2>
+
+<p>In Progress</p>
+
+</div>
+
+
+<div class="stat-card">
+
+<span>✅</span>
+
+<h2>0</h2>
+
+<p>Resolved</p>
+
+</div>
+
+
+<div class="stat-card">
+
+<span>⚠️</span>
+
+<h2>0</h2>
+
+<p>Escalated</p>
+
+</div>
+
+</div>
+
+
+<div class="dashboard-sections">
+
+<div
+class="dashboard-box clickable"
+onclick="window.location.href='complaint.html'">
+
+<h3>📢 Report a Complaint</h3>
+
+<p>
+Submit a new community grievance with
+image, description and GPS location.
+</p>
+
+<button class="primary-btn">
+New Complaint
+</button>
+
+</div>
+
+
+<div
+class="dashboard-box clickable"
+onclick="window.location.href='tracking.html'">
+
+<h3>📍 Track Complaint</h3>
+
+<p>
+Track your complaint from submission
+to final resolution.
+</p>
+
+<button class="secondary-btn">
+Track Status
+</button>
+
+</div>
+
+</div>
+
+</main>
+
+
+<script src="script.js"></script>
+
+<script>
+
+const citizen =
+JSON.parse(
+localStorage.getItem("aa28_citizen")
+);
+
+if (citizen) {
+
+document.querySelector("h1")
+.innerHTML =
+"Welcome, " + citizen.name + " 👋";
+
+}
+
+const complaints =
+JSON.parse(
+localStorage.getItem("aa28_complaints")
+) || [];
+
+document.getElementById(
+"totalComplaints"
+).innerText = complaints.length;
+
+</script>
+
+</body>
+
+</html>
